@@ -291,7 +291,7 @@ index fa6377d..38ef297 100644
  #MaxStartups 10:30:60
  #Banner /etc/issue.net
 ```
-These modifications are for now in your working directory. Nothing happened to your repository. You can easily cancel all these modifications if you want (Hint use `git reset`). Now, as previously, we'll use the `git add` command to place these changes in the staging area. From there, you'll be able to add them to your repository if you want. Git can help you commit only changes relevant to a coherent modification. For that use the following (do not choose all modifications):
+These modifications are for now in your working directory, but nothing happened to your repository. You can easily cancel all these modifications if you want (Hint use `git reset`). Now, we can add these changes to git's staging area, and from the staging area commit those changes to the repository. You should only commit related changes in a single commit (e.g. commit either a bugfix or a new feature, not both) to make it easy to see which changes are connected later. As an example (do not select all changes):
 
 `userX:~/localrepo$` **`git add -p`**
 ```
