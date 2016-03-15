@@ -443,8 +443,6 @@ index fa6377d..38ef297 100644
  #Banner /etc/issue.net
 ```
 
-You'll now be able to commit your changes. The following lines in bold are an example of comment you can put, while you'll see lines commented (with a # as first char) which gives you information on what will be done by Git.
-
 `userX:~/localrepo$` **`git commit`**
 
 **`Moves comments around`**
@@ -807,7 +805,7 @@ Using the `--no-ff` option has allowed us to keep track of the origin of the pat
 
 Estimated time: 15 minutes.
 
-In order to have a more interesting environment, we'll now look to work with another group, so each of you can deal with a remote repository. If you're even group number (2p) deal with the previous odd one (2p-1), and if you're an odd group number (2p-1) deal the for even after you (2p). You're now a single team working on the same project, using the repository of the odd group as the reference one. If a password is asked there, remember it's ilovegitX.
+In order to have a more interesting environment, we'll now look to work with another group, so each of you can deal with a remote repository. If you're even group number (2p) deal with the previous odd one (2p-1), and if you're an odd group number (2p-1) deal the for even after you (2p). You're now a single team working on the same project, using the repository of the odd group as the reference one.
 
 `userX:~/localrepo$` **`git remote add origin ssh://groupX@10.3.222.22/home/groupX/localrepo`**
 
