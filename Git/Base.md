@@ -114,14 +114,14 @@ drwxr-xr-x 4 group3 group3 4096 Mar 11 19:13 ..
 drwxrwxr-x 7 group3 group3 4096 Mar 11 19:07 .git
 ```
 
-So we've got a success  ! Of course, we do not really go far, but you see that you now have a place to store Git metadata.
+So now we've created a git repository. It doesn't hold much yet, because you haven't created or changed any files.
 We can now start using it to manage some content. But before that, we want to configure our Git setup a little.
 
 ## Managing content in your local repository
 
 ### Populating the repository
 
-We will add some content in our local directory, start making modifications, verify how Git react and try to check them in.
+We will add some content in our local directory, start making modifications, see how Git reacts, then try to check those changes in.
 
 `userX:~$` **`cp -a /etc/ssh localrepo/`**
 
@@ -147,7 +147,7 @@ Untracked files:
 nothing added to commit but untracked files present (use "git add" to track)
 ```
 
-Here Git suggest that we add the newly created directory to track it and its content in the future, so we can manage its history as modifications are made to it. Let's do that.
+Here Git suggests that we add the newly created directory to track it and its content in the future, so we can manage its history as modifications are made to it. Let's do that.
 
 `userX:~/localrepo$` **`git add ssh`**
 
@@ -169,7 +169,7 @@ Changes to be committed:
         new file:   ssh/sshd_config
 
 ```
-So Git is now aware that we want to keep track of all these files. We will now initiate our repository with this first content, enter in the editor to comment on the reasons we do that change and validate this.
+So Git is now aware that we want to keep track of all these files. We will now initialize our repository with this new content, use the editor to give the reasons we've made a change and validate this.
 
 `userX:~/localrepo$` **`git commit`**
 
@@ -219,7 +219,7 @@ As you can see, Git identifies our import by a unique commit ID, which will rema
 
 ### Modifying content
 
-Now that we have some content, let's start making modifications and see how Git deals with them ! Edit 2 files in the `ssh` directory, modify some content in it (we do not care of correctness at that point) and validate these 2 sets of modifications. Review your modification (expressed as a patch format - lines starting with a '+' will be added and those starting with a '-' will be removed):
+Now that we have some content, let's start making modifications and see how Git deals with them ! Edit 2 files in the `ssh` directory, modify some content in it (we do not care about correctness at this point) and validate these 2 sets of modifications. Review your modification (expressed as a patch format - lines starting with a '+' will be added and those starting with a '-' will be removed):
 
 `userX:~/localrepo$` **`git status`**
 ```
