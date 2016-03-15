@@ -114,14 +114,14 @@ drwxr-xr-x 4 group3 group3 4096 Mar 11 19:13 ..
 drwxrwxr-x 7 group3 group3 4096 Mar 11 19:07 .git
 ```
 
-So we've got a success  ! Of course, we do not really go far, but you see that you now have a place to store Git metadata.
+So now we've created a git repository. It doesn't hold much yet, because you haven't created or changed any files.
 We can now start using it to manage some content. But before that, we want to configure our Git setup a little.
 
 ## Managing content in your local repository
 
 ### Populating the repository
 
-We will add some content in our local directory, start making modifications, verify how Git react and try to check them in.
+We will add some content in our local directory, start making modifications, see how Git reacts, then try to check those changes in.
 
 `userX:~$` **`cp -a /etc/ssh localrepo/`**
 
@@ -147,7 +147,7 @@ Untracked files:
 nothing added to commit but untracked files present (use "git add" to track)
 ```
 
-Here Git suggest that we add the newly created directory to track it and its content in the future, so we can manage its history as modifications are made to it. Let's do that.
+Here Git suggests that we add the newly created directory to track it and its content in the future, so we can manage its history as modifications are made to it. Let's do that.
 
 `userX:~/localrepo$` **`git add ssh`**
 
@@ -169,7 +169,7 @@ Changes to be committed:
         new file:   ssh/sshd_config
 
 ```
-So Git is now aware that we want to keep track of all these files. We will now initiate our repository with this first content, enter in the editor to comment on the reasons we do that change and validate this.
+So Git is now aware that we want to keep track of all these files. We will now initialize our repository with this new content, use the editor to give the reasons we've made a change and validate this.
 
 `userX:~/localrepo$` **`git commit`**
 
@@ -219,7 +219,7 @@ As you can see, Git identifies our import by a unique commit ID, which will rema
 
 ### Modifying content
 
-Now that we have some content, let's start making modifications and see how Git deals with them ! Edit 2 files in the `ssh` directory, modify some content in it (we do not care of correctness at that point) and validate these 2 sets of modifications. Review your modification (expressed as a patch format - lines starting with a '+' will be added and those starting with a '-' will be removed):
+Now that we have some content, let's start making modifications and see how Git deals with them ! Edit 2 files in the `ssh` directory, modify some content in it (we do not care about correctness at this point) and validate these 2 sets of modifications. Review your modification (expressed as a patch format - lines starting with a '+' will be added and those starting with a '-' will be removed):
 
 `userX:~/localrepo$` **`git status`**
 ```
@@ -291,7 +291,7 @@ index fa6377d..38ef297 100644
  #MaxStartups 10:30:60
  #Banner /etc/issue.net
 ```
-These modifications are for now in your working directory. Nothing happened to your repository. You can easily cancel all these modifications if you want (Hint use `git reset`). Now, as previously, we'll use the `git add` command to place these changes in the staging area. From there, you'll be able to add them to your repository if you want. Git can help you commit only changes relevant to a coherent modification. For that use the following (do not choose all modifications):
+These modifications are for now in your working directory, but nothing happened to your repository. You can easily cancel all these modifications if you want (Hint use `git reset`). Now, we can add these changes to git's staging area, and from the staging area commit those changes to the repository. You should only commit related changes in a single commit (e.g. commit either a bugfix or a new feature, not both) to make it easy to see which changes are connected later. As an example (do not select all changes):
 
 `userX:~/localrepo$` **`git add -p`**
 ```
@@ -442,8 +442,6 @@ index fa6377d..38ef297 100644
  #MaxStartups 10:30:60
  #Banner /etc/issue.net
 ```
-
-You'll now be able to commit your changes. The following lines in bold are an example of comment you can put, while you'll see lines commented (with a # as first char) which gives you information on what will be done by Git.
 
 `userX:~/localrepo$` **`git commit`**
 
@@ -807,7 +805,7 @@ Using the `--no-ff` option has allowed us to keep track of the origin of the pat
 
 Estimated time: 15 minutes.
 
-In order to have a more interesting environment, we'll now look to work with another group, so each of you can deal with a remote repository. If you're even group number (2p) deal with the previous odd one (2p-1), and if you're an odd group number (2p-1) deal the for even after you (2p). You're now a single team working on the same project, using the repository of the odd group as the reference one. If a password is asked there, remember it's ilovegitX.
+In order to have a more interesting environment, we'll now look to work with another group, so each of you can deal with a remote repository. If you're even group number (2p) deal with the previous odd one (2p-1), and if you're an odd group number (2p-1) deal the for even after you (2p). You're now a single team working on the same project, using the repository of the odd group as the reference one.
 
 `userX:~/localrepo$` **`git remote add origin ssh://groupX@10.3.222.22/home/groupX/localrepo`**
 
