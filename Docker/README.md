@@ -102,13 +102,14 @@ export https_proxy=http://<proxy name or ip>:<proxy port>
 ```
 
  4. Configure Docker daemon to use the proxy as explained by this document: https://docs.docker.com/engine/admin/systemd/#http-proxy (in short add Environment="HTTP_PROXY=http://proxy.example.com:80/" "HTTPS_PROXY=http://proxy.example.com:80/" to your [services] section)
- 5. **Set the proxy in each of your Dockerfiles** by adding following text as the 2nd and 3rd line of the Dockerfile.
+ 5. Build Dockerfile with the appropriate arguments.
 
 ```
-ENV http_proxy <HTTP_PROXY>
-ENV https_proxy <HTTP_PROXY>
+docker build --build-arg http_proxy=http://<proxy name or ip>:<proxy port> https_proxy=http://<proxy name or ip>:<proxy port> .
 ```
 
+Documentation details :
+https://docs.docker.com/engine/reference/builder/#arg
 
 ## Docker installation
 Docker is available externally from http://docs.docker.com/linux/step_one/ or using your distribution packages, or from github at https://github.com/docker/docker
