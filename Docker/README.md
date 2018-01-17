@@ -79,6 +79,12 @@ Well in that case, first condolences, then read the fine document made by Michae
 # Environment setup
 Estimated time: 15 minutes
 
+## Lab setup
+
+Please refer to the instructions available at https://github.com/bcornec/Labs/blob/master/ENVIRONMENT.md
+
+Note that Docker is also providing the possibility to have a web based access to an on demand infrastructure for 4 hours. This is available at http://play-with-docker.com. Check that as a fallback you can use it and create up to 5 nodes with it. Beomce familiar to use this or your platform of choice for the rest of the Lab.
+
 ## Proxy consideration
 
 This lab is usually run in our environment that has a direct access to the Internet. If you want to run this lab on your site behind a corporate proxy, you will have to configure your Linux distribution and Docker to access the Internet via your proxy.
