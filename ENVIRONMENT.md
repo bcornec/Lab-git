@@ -54,7 +54,7 @@ You need to launch a cmd command as **Administrator** on your system (use the St
 
 Download the 4 files previously mentioned in the wget command under C:\openvpn. Then issue:
 
-`C:\openvpn>` **`openvpn --config vpnlabFLOSSCon.conf`**
+`C:\openvpn>` **`"c:\Program Files\OpenVPN\bin\openvpn" --config vpnlabFLOSSCon.conf`**
 
 From now on, you should be able to connect using ssh to your system. If you're making this lab from within the HPE Network, you'll need to edit the vpnlabFLOSSCon.conf file to enable the appropriate proxy.
 
