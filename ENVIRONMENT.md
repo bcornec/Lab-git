@@ -102,6 +102,7 @@ cd /etc/openvpn/easy-rsa/
 . ./vars
 ./build-key labXXX
 perl -p -e 's/lab2017/labXXX/g' keys/vpnlab2017.conf > keys/vpnlabXXX.conf
+perl -pi -e 's/vpn.innovationcenters/labossi.hpintelco/' keys/vpnlabXXX.conf
 chown bruno keys/*labXXX*
 ```
 Then on the management node
