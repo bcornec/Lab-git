@@ -101,8 +101,8 @@ Root access is available using the **linux1** password.
 | ...  | ... |
 | lab10 | 10.11.53.110 |
 | ...  | ... |
-| lab19 | 10.11.53.119 |
-| lab20 | 10.11.53.120 |
+| lab23 | 10.11.53.123 |
+| lab24 | 10.11.53.124 |
 
 Root access is available using the **FLOSSCon2018** password. (There is a centos account with the password FLOSSCon for non-root activities, in fact nearly all ;-)
 
