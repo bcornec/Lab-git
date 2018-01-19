@@ -62,14 +62,12 @@ For those of you still unlucky using a Windows desktop system, then install putt
 
 For those of you unlucky using a MacOS desktop system, then install a compatible openvpn tool in case you don't have it already from https://code.google.com/p/tunnelblick/. Then launch TunnelBlick using that conf file.
 
-![Tunnelblick bar ](/img/tb1.png)
+![Tunnelblick bar ](/img/tb1.png)https://github.com/bcornec/Labs
 ![Tunnelblick configuration ](/img/tb2.png)
 
 ### Operating system setup
 
 All systems have been deployed before the Lab with a CentOS 7 Linux distribution. 
-
-Root access is available using the **flosscon2018** password.
 
 In case you need additional tools on the system, you can search for a package (*yum search pattern*)  and then install it from the deployment server (*yum install package*).
 
@@ -79,7 +77,7 @@ All student servers named cX or labX (where X is the previously mentioned number
 
 In case you encounter issues with name resolution (typically with a Windows client) then here is the mapping of names and IP addresses:
 
-| Name | IP |
+| Name of physical nodes | IP |
 | --- | --- |
 | c6 | 10.11.51.136 |
 | c7 | 10.11.51.137 |
@@ -92,6 +90,21 @@ In case you encounter issues with name resolution (typically with a Windows clie
 | c14 | 10.11.51.144 |
 | c15 | 10.11.51.145 |
 
+Root access is available using the **linux1** password.
+
+| Name of virtual nodes | IP |
+| --- | --- |
+| lab1 | 10.11.53.101 |
+| lab2 | 10.11.53.102 |
+| lab3 | 10.11.53.103 |
+| lab4 | 10.11.53.104 |
+| ...  | ... |
+| lab10 | 10.11.53.110 |
+| ...  | ... |
+| lab19 | 10.11.53.119 |
+| lab120 | 10.11.53.120 |
+
+Root access is available using the **FLOSSCon2018** password. (There is a centos account with the password FLOSSCon for non-root activities, in fact nearly all ;-)
 
 ## Instructor notes
 
