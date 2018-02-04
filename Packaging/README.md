@@ -42,6 +42,8 @@ In order to append text to the file, the first `>` can be replaced with `>>`.
 
 If you prefer, you can edit the files using **vim** or **nano** text editors.
 
+Commands to be executed as root user are prefixed with a `#` prompt, while commands to be executed as a normal user are prefixed with the `$` prompt.
+
 # Environment setup
 Estimated time: 10 minutes
 
@@ -70,7 +72,7 @@ Other distributions should be as easy to deal with once the same packages have b
 
 If you work on a CentOS 7 environment for the Lab, you may want to use yum to do the installation of all the dependencies.
 
-`#` **`yum install wget,make,patch,rpm-build,diffutils`**
+`#` **`yum install wget make patch rpm-build diffutils`**
 
 ### Debian and Ubuntu installation
 
@@ -78,12 +80,17 @@ If you work on a Debian or Ubuntu environment for the Lab, you may want to use a
 
 `#` **`sudo apt-get update`**
 
-`#` **`sudo apt-get install wget,patch,dpkg-dev,make,debian-builder,dh-make,fakeroot,diffutil`**
+`#` **`sudo apt-get install wget patch dpkg-dev make debian-builder dh-make fakeroot diffutil`**
 
 # Building RPM Packages
 Estimated time: 15 minutes.
 ## The first package
-In order to be able to manage a first package, the easiest approach is to import an existing one, before creating your own. For that we will refer to the public Docker registry which contains thousands of ready to be consumed containers:
+First the best practice to work on packages is to work as a normal user, not as root. Building as root, if you have errors i nyour build configuration may lead to an unusable system, so it's important (and ture in geenral) to just adopt the minimum set of priviledges required for the operations we do. Of course, installing the package, once built, will require root priviledges, but everything else should be performed as a normal user.
+
+
+`#` **`useradd rpm`**
+
+In order to be able to manage a first package, the easiest approach is to import an existing one, before creating your own. For that we will refer to the public 
 
 `#` **`docker run hello-world`**
 ```
