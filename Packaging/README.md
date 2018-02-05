@@ -17,6 +17,7 @@ When dealing with Linux packaging some docuemnt of reference might be useful to 
 
  1. The still relevant Maximum RPM guide at http://ftp.rpm.org/max-rpm/
  1. Fedora packaging guidelines at https://fedoraproject.org/wiki/Packaging:Guidelines
+ 1. RPM packaging guide at https://rpm-packaging-guide.github.io/
  2. The corresponding reference guide for Debian at https://www.debian.org/doc/manuals/maint-guide/
 
 At the start of each section there is an estimate of how long it will take to complete.
@@ -72,7 +73,7 @@ Other distributions should be as easy to deal with once the same packages have b
 
 If you work on a CentOS 7 environment for the Lab, you may want to use yum to do the installation of all the dependencies.
 
-`#` **`yum install wget make patch rpm-build rpmdevtools diffutils sudo`**
+`#` **`yum install wget make patch rpm-build rpmdevtools rpmlint diffutils sudo`**
 
 ### Debian and Ubuntu installation
 
@@ -318,136 +319,427 @@ Look at the man pages for `yum` and `rpm` to learn more about them.
 
 # Building RPM Packages
 ## The first package
+Estimated time: 15 minutes.
 
-First the best practice to work on packages is to work as a normal user, not as root. Building as root, if you have errors i nyour build configuration may lead to an unusable system, so it's important (and ture in geenral) to just adopt the minimum set of priviledges required for the operations we do. Of course, installing the package, once built, will require root priviledges, but everything else should be performed as a normal user.
+First the best practice to work on packages is to work as a normal user, not as root. Building as root, if you have errors in your build configuration may lead to an unusable system, so it's important (and sure in general) to just adopt the minimum set of priviledges required for the operations we do. Of course, installing the package, once built, will require root priviledges as seen previously, but everything else should be performed as a normal user. You may open 2 terminals one as a user, the other one as root to ease operations.
 
 `#` **`useradd pkg`**
 
 `#` **`passwd pkg`**
 
-For that we will use the rpmdev-newspec command to generate the template we need for our test executable. first create the "application" we want to package:
+the packages RPM packages are created is through the usage of a spec file. So, you first have to create one in order to build your package.
+For that we will use the `rpmdev-newspec` command to generate the template we need for our test executable. First create the "application" we want to package:
 
-`#` **`cat > hello-world.sh << EOF`**
+`#` **`su - pkg`**
+`$` **`cat > hello-world.sh << EOF`**
 ```
 #!/bin/bash
 echo "Hello Packaging World"
 EOF
 ```
 
-`#` **`chmod 755 hello-world.sh`**
+`$` **`chmod 755 hello-world.sh`**
 
-`#` **`./hello-world.sh`**
+`$` **`./hello-world.sh`**
+```
+Hello Packaging World
+```
 
 
 Then create the template for our package:
 
-`#` **`docker run hello-world`**
+`$` **`rpmdev-newspec hello-world`**
+
+Look at its content and modify it so it corresponds to the following:
+
+`$` **`cat hello-world.spec`**
 ```
-Unable to find image 'hello-world:latest' locally
+Name:           hello-world
+Version:        1.0
+Release:        1
+Summary:        A simple hello world application
 
-# Configuring owncloud in a container
+License:        GPLv3
+URL:            None-yet
+Source0:        hello-world.sh
 
-Estimated time: 60 minutes.
+#BuildRequires:  
+Requires:       bash
 
-Owncloud is a web based application providing services such as calendar data or file sharing e.g.
-When we want to contain an application such as owncloud, there are a certain number of aspects to take in account and solve:
-  1. installing the application and its dependencies in the container
-  2. allow IP configuration for remote access to the application
-  3. allow data persistence at each invocation of the container
-  4. allow configuration data persistence at each invocation of the container
-One possibility would be to run the container from an image and launch the various commands in the container (as we've done previously). We could put that in a script and launch it systematically when we instantiate a container from an image, or rebuild a prepared image to be instantiated later. But there is a better way to achieve what we want to do, and this is by using the automation process by Docker with the Dockerfile.
+%description
+A simple hello world application
 
-The Dockerfile is a way to describe all the operations required to create an image from an initial empty one and stacking all the operations to build at the end the final image ready to be instantiated and consumed and thrown away
-Let's start our Dockerfile by creating a simple container from a base image and just installing some software components useful for our environment, and build an image from that:
+%prep
+##setup -q
 
-`#` **`cat > Dockerfile << EOF`**
+%build
+##configure
+#make %{?_smp_mflags}
+
+
+%install
+rm -rf $RPM_BUILD_ROOT
+##make_install
+mkdir -p $RPM_BUILD_ROOT/%{_bindir}
+cp %{SOURCE0} $RPM_BUILD_ROOT/%{_bindir}
+
+
+%files
+%{_bindir}/%{name}.sh
+
+##doc
+
+%changelog
+* Sun Feb 04 2018 Bruno Cornec <pingouin@hpe.com> 1.0-1
+- First Import
 ```
-FROM centos:6
-RUN yum install -y httpd
+
+We commented the `%prep` and `%build` phases as we do not have anything to build yet. We just need to copy one file at installation time. Also we need to refer to it in the files section, so the package knows which files it manages (there is no magic, if you don't tell it, rpm won't guess).
+
+Now try to build your first package with:
+
+`$` **`rpmbuild -ba hello-world.spec`**
+```
+Executing(%prep): /bin/sh -e /var/tmp/rpm-tmp.UphFwA
++ umask 022
++ cd /home/pkg/rpmbuild/BUILD
++ exit 0
+Executing(%build): /bin/sh -e /var/tmp/rpm-tmp.tZ3FjV
++ umask 022
++ cd /home/pkg/rpmbuild/BUILD
++ exit 0
+Executing(%install): /bin/sh -e /var/tmp/rpm-tmp.bWS86f
++ umask 022
++ cd /home/pkg/rpmbuild/BUILD
++ '[' /home/pkg/rpmbuild/BUILDROOT/hello-world-1.0-1.x86_64 '!=' / ']'
++ rm -rf /home/pkg/rpmbuild/BUILDROOT/hello-world-1.0-1.x86_64
+++ dirname /home/pkg/rpmbuild/BUILDROOT/hello-world-1.0-1.x86_64
++ mkdir -p /home/pkg/rpmbuild/BUILDROOT
++ mkdir /home/pkg/rpmbuild/BUILDROOT/hello-world-1.0-1.x86_64
++ rm -rf /home/pkg/rpmbuild/BUILDROOT/hello-world-1.0-1.x86_64
++ cp /home/pkg/rpmbuild/SOURCES/hello-world.sh /home/pkg/rpmbuild/BUILDROOT/hello-world-1.0-1.x86_64//usr/bin
+cp: cannot stat '/home/pkg/rpmbuild/SOURCES/hello-world.sh': No such file or directory
+error: Bad exit status from /var/tmp/rpm-tmp.bWS86f (%install)
+
+
+RPM build errors:
+    Bad exit status from /var/tmp/rpm-tmp.bWS86f (%install)
+```
+
+This doesn't work. Of course, what did you expect ? You now need to understand what is wrong !
+
+If you look at your directory, you should see that a new subdirectory was created, and below it more directories:
+
+`$` **`ls -R`**
+```
+.:
+hello-world.sh  hello-world.spec  rpmbuild
+
+./rpmbuild:
+BUILD  BUILDROOT  RPMS  SOURCES  SPECS  SRPMS
+
+./rpmbuild/BUILD:
+
+./rpmbuild/BUILDROOT:
+
+./rpmbuild/RPMS:
+
+./rpmbuild/SOURCES:
+
+./rpmbuild/SPECS:
+
+./rpmbuild/SRPMS:
+```
+
+By default, the rpmbuild command expect to work under the rpmbuild directory in your $HOME directory. And spec files are expected under the SPECS subdirectory, as well as all needed sources under the SOURCES subdirectory. The other directories are used for build generation (BUILD and BUILDROOT) and delivery of built packages (RPMS and SRPMS). So you need to move your files at the expected place for the build to work. A best practice here is also to place the content of the SPECS and SOURCES files under a Version Control System such as git or subversion.
+
+`$` **`mv hello-world.spec rpmbuild/SPECS`**
+
+`$` **`mv hello-world.sh rpmbuild/SOURCES`**
+
+`$` **`cd rpmbuild/SPECS`**
+
+`$` **`rpmbuild -ba hello-world.spec`**
+```
+Executing(%prep): /bin/sh -e /var/tmp/rpm-tmp.TswAHA
++ umask 022
++ cd /home/pkg/rpmbuild/BUILD
++ exit 0
+Executing(%build): /bin/sh -e /var/tmp/rpm-tmp.dIscCM
++ umask 022
++ cd /home/pkg/rpmbuild/BUILD
++ exit 0
+Executing(%install): /bin/sh -e /var/tmp/rpm-tmp.Qn77wY
++ umask 022
++ cd /home/pkg/rpmbuild/BUILD
++ '[' /home/pkg/rpmbuild/BUILDROOT/hello-world-1.0-1.x86_64 '!=' / ']'
++ rm -rf /home/pkg/rpmbuild/BUILDROOT/hello-world-1.0-1.x86_64
+++ dirname /home/pkg/rpmbuild/BUILDROOT/hello-world-1.0-1.x86_64
++ mkdir -p /home/pkg/rpmbuild/BUILDROOT
++ mkdir /home/pkg/rpmbuild/BUILDROOT/hello-world-1.0-1.x86_64
++ rm -rf /home/pkg/rpmbuild/BUILDROOT/hello-world-1.0-1.x86_64
++ mkdir -p /home/pkg/rpmbuild/BUILDROOT/hello-world-1.0-1.x86_64//usr/bin
++ cp /home/pkg/rpmbuild/SOURCES/hello-world.sh /home/pkg/rpmbuild/BUILDROOT/hello-world-1.0-1.x86_64//usr/bin
++ /usr/lib/rpm/check-buildroot
++ /usr/lib/rpm/redhat/brp-compress
++ /usr/lib/rpm/redhat/brp-strip /usr/bin/strip
++ /usr/lib/rpm/redhat/brp-strip-comment-note /usr/bin/strip /usr/bin/objdump
++ /usr/lib/rpm/redhat/brp-strip-static-archive /usr/bin/strip
++ /usr/lib/rpm/brp-python-bytecompile /usr/bin/python 1
++ /usr/lib/rpm/redhat/brp-python-hardlink
++ /usr/lib/rpm/redhat/brp-java-repack-jars
+Processing files: hello-world-1.0-1.x86_64
+Provides: hello-world = 1.0-1 hello-world(x86-64) = 1.0-1
+Requires(rpmlib): rpmlib(CompressedFileNames) <= 3.0.4-1 rpmlib(FileDigests) <= 4.6.0-1 rpmlib(PayloadFilesHavePrefix) <= 4.0-1
+Requires: /bin/bash
+Checking for unpackaged file(s): /usr/lib/rpm/check-files /home/pkg/rpmbuild/BUILDROOT/hello-world-1.0-1.x86_64
+Wrote: /home/pkg/rpmbuild/SRPMS/hello-world-1.0-1.src.rpm
+Wrote: /home/pkg/rpmbuild/RPMS/x86_64/hello-world-1.0-1.x86_64.rpm
+Executing(%clean): /bin/sh -e /var/tmp/rpm-tmp.gvPK3y
++ umask 022
++ cd /home/pkg/rpmbuild/BUILD
++ /usr/bin/rm -rf /home/pkg/rpmbuild/BUILDROOT/hello-world-1.0-1.x86_64
++ exit 0
+```
+
+`$` **`(cd ../../ ; ls -R)`**
+```
+.:
+rpmbuild
+
+./rpmbuild:
+BUILD  BUILDROOT  RPMS  SOURCES  SPECS  SRPMS
+
+./rpmbuild/BUILD:
+
+./rpmbuild/BUILDROOT:
+
+./rpmbuild/RPMS:
+x86_64
+
+./rpmbuild/RPMS/x86_64:
+hello-world-1.0-1.x86_64.rpm
+
+./rpmbuild/SOURCES:
+hello-world.sh
+
+./rpmbuild/SPECS:
+hello-world.spec
+
+./rpmbuild/SRPMS:
+hello-world-1.0-1.src.rpm
+```
+
+So 2 packages have been created, the one which is of interest to you under rpmbuild/RPMS/x86_64 called the binary package and another one, called the source RPM under rpmbuild/SRPMS. This last one contains everything you need to rebuild the package (the spec and source files) and thus can be provided to another team in order to obtain the same binary package you got, providing the environment is similar.
+
+`$` **`rpm -qlvp ../SRPMS/hello-world-1.0-1.src.rpm`**
+```
+-rwxr-xr-x    1 pkg     pkg                        41 Feb  5 02:30 hello-world.sh
+-rw-rw-r--    1 pkg     pkg                       588 Feb  5 02:53 hello-world.spec
+```
+
+`$` **`rpm -qip ../SRPMS/hello-world-1.0-1.src.rpm`**
+```
+Name        : hello-world
+Version     : 1.0
+Release     : 1
+Architecture: x86_64
+Install Date: (not installed)
+Group       : Unspecified
+Size        : 629
+License     : GPLv3
+Signature   : (none)
+Source RPM  : (none)
+Build Date  : Mon Feb  5 02:53:10 2018
+Build Host  : 5e828de159c9
+Relocations : (not relocatable)
+URL         : None-yet
+Summary     : A simple hello world application
+Description :
+A simple hello world application
+```
+
+`$` **`rpm -qlvp ../RPMS/x86_64/hello-world-1.0-1.x86_64.rpm`**
+```
+-rwxr-xr-x    1 root    root                       41 Feb  5 02:53 /usr/bin/hello-world.sh
+```
+
+`$` **`rpm -qip ../RPMS/x86_64/hello-world-1.0-1.x86_64.rpm`**
+```
+Name        : hello-world
+Version     : 1.0
+Release     : 1
+Architecture: x86_64
+Install Date: (not installed)
+Group       : Unspecified
+Size        : 41
+License     : GPLv3
+Signature   : (none)
+Source RPM  : hello-world-1.0-1.src.rpm
+Build Date  : Mon Feb  5 02:53:10 2018
+Build Host  : 5e828de159c9
+Relocations : (not relocatable)
+URL         : None-yet
+Summary     : A simple hello world application
+Description :
+A simple hello world application
+```
+
+So now you have your package, you can install it and run your command !
+
+`#` **`rpm -ivh ../RPMS/x86_64/hello-world-1.0-1.x86_64.rpm`**
+```
+Preparing...                          ################################# [100%]
+Updating / installing...
+   1:hello-world-1.0-1                ################################# [100%]
+```
+
+`$` **`hello-world.sh`**
+```
+Hello Packaging World
+```
+
+## Going one step further in package building
+
+Estimated time: 15 minutes.
+
+Well our "application" is really simple and doesn't really correspond to a real one. We're missing content (licensing file, man page, documentation) and our package is in fact wrong. Well you could say, it worked, it installed, the command runs, so what ? That's where `rpmlint` comes to the rescue:
+
+`$` **`rpmlint ../RPMS/x86_64/hello-world-1.0-1.x86_64.rpm`**
+```
+hello-world.x86_64: W: invalid-url URL None-yet
+hello-world.x86_64: E: no-binary
+hello-world.x86_64: W: no-documentation
+hello-world.x86_64: W: no-manual-page-for-binary hello-world.sh
+1 packages and 0 specfiles checked; 1 errors, 4 warnings.
+```
+So indeed we do have problems to solve ;-)
+The main one is that we created a x86_64 binary package whereas we do not have any binary in it. That's the default behaviour when nothing is specified in our spec file. So what we really would like to have is what is called a "noarch" package, a package which is independent from the processor architecture and could be installed similarly on i586, x86_64, arm64 or ia64 e.g. For that we need to add the following line to our spec file below the Requires line:
+
+```
+BuildArch:      noarch
+```
+
+Rebuild then the package and look at what changed.  Uninstall the previous one and install that new one and check again the program and the output of `rpmlint` to verify that the error indeed disappeared.
+
+It's now time to solve our warnings. Fixing the URL is easy, just use a correct one pointing to your home page e.g. or something like http://www.none.net
+Then you really have to create the missing documentation, and while it's not described explicitely the license as well. So do the following:
+
+`$` **`cat > ../SOURCES/hello-world.sh.man << EOF`**
+```
+.\" Copyright (c) 2018 Bruno Cornec
+.\"                                                                                                                                                                                                  
+.\" This work is licensed under a Creative Commons 
+.\" Attribution-ShareAlike 4.0 International License.
+.\" https://creativecommons.org/licenses/by-sa/4.0/
+.TH HELLO-WORLD.SH 1 
+.SH NAME
+hello-world.sh \- a tool to welcome you
+.SH SYNOPSIS
+.B hello-world.sh
+.SH DESCRIPTION
+.PP
+.B hello-world.sh
+displays a welcome message
+.SH OPTIONS
+.PP
+hello-world.sh has no option
+.SH DIAGNOSTICS
+.B hello-world.sh
+writes some output to the console
+.SH "SEE ALSO"
+
+.TP
+See mailing list at http://www.none.net for technical support.
+.SH AUTHORS
+.BR
+Bruno Cornec (lead-development) 
+.I "bruno_at_hpe.com"
+.
 EOF
 ```
-`#` **`docker build .`**
+
+`$` **`wget https://www.gnu.org/licenses/gpl.txt`**
+
+`$` **`mv gpl.txt ../SOURCES/LICENSE`**
+
+And amend the spec file in order to use these documentation files:
+
+```
+--- hello-world.spec.old        2018-02-05 05:12:55.258477109 +0000
++++ hello-world.spec    2018-02-05 05:14:59.102468999 +0000
+@@ -4,11 +4,14 @@
+ Summary:        A simple hello world application
+ 
+ License:        GPLv3
+-URL:            None-yet
++URL:            http://www.none.net
+ Source0:        hello-world.sh
++Source1:        hello-world.sh.man
++Source2:        LICENSE
+ 
+ #BuildRequires:  
+ Requires:       bash
++BuildArch:     noarch
+ 
+ %description
+ A simple hello world application
+@@ -25,13 +28,18 @@
+ rm -rf $RPM_BUILD_ROOT
+ ##make_install
+ mkdir -p $RPM_BUILD_ROOT/%{_bindir}
++mkdir -p $RPM_BUILD_ROOT/%{_mandir}/man1
+ cp %{SOURCE0} $RPM_BUILD_ROOT/%{_bindir}
++cp %{SOURCE1} $RPM_BUILD_ROOT/%{_mandir}/man1/%{name}.sh.1
++nroff -man %{SOURCE1} > $RPM_BUILD_DIR/README
++cp %{SOURCE2} $RPM_BUILD_DIR
+ 
+ 
+ %files
+ %{_bindir}/%{name}.sh
++%{_mandir}/man1/%{name}.sh.1.gz
+ 
+-##doc
++%doc LICENSE README
+ 
+ %changelog
+ * Sun Feb 04 2018 Bruno Cornec <pingouin@hpe.com> 1.0-1
 ```
 
-# Package a cloud native application.
+You can use this content as an input file to the command `patch` in order to modify your content, or apply the modifications manually.
 
-Let's explain first the application and its goal.
+Rebuild again your package with `rpmbuild`. On the generated package, using the `-p` option of rpm; check the content of your package and verify it with `rpmlint` as well to ensure you've solved all issues.
 
-## Objectives
-
-In this section, we will create a promotional lottery for an e-commerce site.
-All the software components are provided, you'll "just" have to perform a partial containerzation of the service.
-
-As the setup takes some time, we'll start with the instructions and then you'll have time to read the explanations.
-
-First have access to the application we developed for this.
-
-`#` **`yum install -y git`**
-
-`#` **`git clone https://github.com/bcornec/openstack_lab.git`**
-
-`#` **`cd cloud_native_app`**
-
-As you can see in the openstack_lab directory created, the same application can be used for a Docker or an OpenStack usage (or combining them).
-The application is still a WIP, so don't worry with all the additional files and directories for now. Upstream is at https://github.com/uggla/openstack_lab.git alongside its documentation.
-
-We need first to run the application locally using the compose file, in order to create all the Docker images and to upload them into the registry.
-
-`#` **`./docker_services.sh`**
-
-Drink a coffee, it's well deserved at that point, the composition takes a bit of time. Or stay looking at it to observe closely the magic of Docker automation ;-)
-Please start reading the following explanations in or to understand what we're building for you here.
-
-A customer of a big e-commerce site receives a promotional email with a link to win a prize if they are lucky.
-The application detects whether the player already played or not, and whether he won already or not.
-Each status is kept with the date when it was performed. The application provides a button allowing the customer to play, in case he didn't already, and the result of the computation which happens behind the scene is given back to the customer: it is the nature of the article he has won, and the corresponding image is displayed in the interface. Mails are sent to admins when a winner is found.
-
-That application is made of one Web page with 5 parts/micro-services: I, S, B, W and P:
-  - I(dentification) service: receives http request from customer (link with customer ID) and look for it into the DB.
-  - S(tatus) service: detect whether customer already played or not, status stored in the DB. It is using a messages bus to buffer requests.
-  - B(utton) service: button widget allowing the customer to play. Only when not already done.
-  - W(orker) service that computes whether the customer won or not (slow service on purpose with a REST API interface), called by B. If won, post an image representing what has been won into an object store with customer ID. Then post by e-mail via an external provider a message to admins (using a messages bus). Button is gray if the customer has already played. W and the DB are on a separate private network.
-  - P(icture) service: Look into the object store with customer ID to display the image of the customer's prize, empty if no image.
-
-Each part of the web page is implemented as a micro-service. So the application supports nicely the death of any one of the 5 micro-services. The page is still displayed anyway, printing N/A when a micro-service is unavailable. In case of insufficient resources (as with the slow W micro-service), we will look at how to scale that application.
-
-Please have a look at the `docker_services.sh` script and adapt what needs to be changed for your environment at the start in case of issues.
-
-At the end of the script you should get a list of services running similar to the one below:
+`$` **`rpm -qlp /home/pkg/rpmbuild/RPMS/noarch/hello-world-1.0-1.noarch.rpm`**
 ```
-ID            NAME         REPLICAS  IMAGE                                                 COMMAND
-1empjc9o6wwu  w            1/1       lab7-2.labossi.hpintelco.org:5500/cloudnativeapp_w
-1z53fru1vjr6  i            1/1       lab7-2.labossi.hpintelco.org:5500/cloudnativeapp_i
-3gasrkzgpp0w  b            1/1       lab7-2.labossi.hpintelco.org:5500/cloudnativeapp_b
-3sc3qexaixkl  redis        1/1       redis
-4c5i32juwnyh  myownsvc     1/1       lab7-2.labossi.hpintelco.org:5500/owncloud_web
-5yl1168mm6h4  w2           1/1       lab7-2.labossi.hpintelco.org:5500/cloudnativeapp_w2
-6leldkqf1zth  ping         global    alpine                                                ping 8.8.8.8
-79jwqr43zyt2  web          1/1       lab7-2.labossi.hpintelco.org:5500/cloudnativeapp_web
-7hygz6g0lbyq  db           1/1       lab7-2.labossi.hpintelco.org:5500/cloudnativeapp_db
-9i4ogenk03ax  rabbit       1/1       rabbitmq:3-management
-ag12vg6ts417  tiny_curran  10/10     alpine                                                ping 8.8.8.8
-ajcrqc6nykn8  s            1/1       lab7-2.labossi.hpintelco.org:5500/cloudnativeapp_s
-cn81a9a5j8yi  w1           1/1       lab7-2.labossi.hpintelco.org:5500/cloudnativeapp_w1
-e6c6ypgcxdy2  p            1/1       lab7-2.labossi.hpintelco.org:5500/cloudnativeapp_p
+/usr/bin/hello-world.sh
+/usr/share/doc/hello-world-1.0
+/usr/share/doc/hello-world-1.0/LICENSE
+/usr/share/doc/hello-world-1.0/README
+/usr/share/man/man1/hello-world.sh.1.gz
 ```
 
-In order to use the application you'll now have to connect to your system hosting th web application (in our case http://c6.labossi.hpintelco.org/)
-
-You should see a message in your browser saying:
+`$` **`rpmlint /home/pkg/rpmbuild/RPMS/noarch/hello-world-1.0-1.noarch.rpm`**
 ```
-Please provide a user id !
+1 packages and 0 specfiles checked; 0 errors, 0 warnings.
 ```
 
-So now to use the application, you have to provide the id of the user who is playing to see his prize.
-Browse http://c6.labossi.hpintelco.org/index.html?id=1
+and now install it. Why does it not work as expected ?
 
-Check the availability of the application by restarting a docker daemon on a host running one of the containers the application is using.
-Check the micro-service behavior by stopping the 'i' micro-service, and then the 'p' micro-service. Reload the Web page each time to see what happens.
+If you're stuck here, feel free to raise your hand so your instructor can help you !
 
-Try to make more connections. What is the problem encountered.
-Which micro-service is causing the issue.
-Scale that micro-service to solve the problem.
+If you used this command and got that message:
+
+`#` **`rpm -ivh /home/pkg/rpmbuild/RPMS/noarch/hello-world-1.0-1.noarch.rpm`**
+```
+Preparing...                          ################################# [100%]
+        package hello-world-1.0-1.noarch is already installed
+```
+
+then, this is normal ;-) The package you just built has no obvious or distinctive difference with the one which is alread installed. Howeevr, you did change the specfile and rebuilt the package. So one way to solve this would be as before to first remove the previous package and then reinstall. That would work, but is cheating. What you really need to do is indicate to the RPM system that you changed the way you build thepackage. This is what the Release tag is made for. Each time you change your specfile, and want to install or distribute the resulting packages, then you need to increase the Release tag. So here replace the 1 by 2 in the spec file, rebuild and try again to install using the `-F` or `-U` option of the `rpm` command, not the `-i`.
+
+As you can see, building a correct RPM Package is an iterative process that can take some time, even for a simple application like ours. Let's go a bit further now.
+
 
 This is the end of this lab for now, we hope you enjoyed it.
 
