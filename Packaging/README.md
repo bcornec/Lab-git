@@ -331,6 +331,7 @@ the packages RPM packages are created is through the usage of a spec file. So, y
 For that we will use the `rpmdev-newspec` command to generate the template we need for our test executable. First create the "application" we want to package:
 
 `#` **`su - pkg`**
+
 `$` **`cat > hello-world.sh << EOF`**
 ```
 #!/bin/bash
@@ -708,7 +709,7 @@ And amend the spec file in order to use these documentation files:
 
 You can use this content as an input file to the command `patch` in order to modify your content, or apply the modifications manually.
 
-Rebuild again your package with `rpmbuild`. On the generated package, using the `-p` option of rpm; check the content of your package and verify it with `rpmlint` as well to ensure you've solved all issues.
+Rebuild again your package with `rpmbuild`. On the generated package, using the `-p` option of `rpm` check the content of your package and verify it with `rpmlint` as well to ensure you've solved all issues.
 
 `$` **`rpm -qlp /home/pkg/rpmbuild/RPMS/noarch/hello-world-1.0-1.noarch.rpm`**
 ```
@@ -736,7 +737,9 @@ Preparing...                          ################################# [100%]
         package hello-world-1.0-1.noarch is already installed
 ```
 
-then, this is normal ;-) The package you just built has no obvious or distinctive difference with the one which is alread installed. Howeevr, you did change the specfile and rebuilt the package. So one way to solve this would be as before to first remove the previous package and then reinstall. That would work, but is cheating. What you really need to do is indicate to the RPM system that you changed the way you build thepackage. This is what the Release tag is made for. Each time you change your specfile, and want to install or distribute the resulting packages, then you need to increase the Release tag. So here replace the 1 by 2 in the spec file, rebuild and try again to install using the `-F` or `-U` option of the `rpm` command, not the `-i`.
+then, this is normal ;-) The package you just built has no obvious or distinctive difference with the one which is alread installed. However, you did change the specfile and rebuilt the package. So one way to solve this would be as before to first remove the previous package and then reinstall. That would work, but is cheating. What you really need to do is indicate to the RPM system that you changed the way you build thepackage. This is what the Release tag is made for. Each time you change your specfile, and want to install or distribute the resulting packages, then you need to increase the Release tag. So here replace the 1 by 2 in the spec file, rebuild and try again to install using the `-F` or `-U` option of the `rpm` command, not the `-i`.
+
+Do not forget to update the changlog part of the spec file with a new entry !
 
 As you can see, building a correct RPM Package is an iterative process that can take some time, even for a simple application like ours. Let's go a bit further now.
 
