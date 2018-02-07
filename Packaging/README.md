@@ -743,6 +743,190 @@ Do not forget to update the changlog part of the spec file with a new entry !
 
 As you can see, building a correct RPM Package is an iterative process that can take some time, even for a simple application like ours. Let's go a bit further now.
 
+## Packages repositories
+
+Estimated time: 10 minutes.
+
+Of course, we can use the `rpm` command to install our package. But what abour `yum` ? How to share our package so others can also install it easily ? That's what we'll see just now !
+
+To work correctly, yum needs to group the RPM metadata that you can see in the package using `rpm -qi` into central files that yum will use to determine how to install a given package and its dependencies. For that, you need to use the `createrepo` command, part of the eponym package if you don't have it installed:
+
+`$` **`cd /home/pkg/rpmbuild/RPMS`**
+
+`$` **`rm -rf x86_64`**
+
+We remove the now old created binary package that we don't need.
+
+`$` **`createrepo .`**
+```
+Spawning worker 0 with 1 pkgs
+Spawning worker 1 with 1 pkgs
+Spawning worker 2 with 1 pkgs
+Spawning worker 3 with 0 pkgs
+Workers Finished
+Saving Primary metadata
+Saving file lists metadata
+Saving other metadata
+Generating sqlite DBs
+Sqlite DBs complete
+```
+
+`$` **`ls -al repodata`**
+```
+total 28
+-rw-rw-r-- 1 pkg pkg  425 Feb  6 21:46 20d9c30e0ee90aee9a4d53ebbbcfc06b39c6c8257cb12227835f9387aeedc4bb-filelists.xml.gz
+-rw-rw-r-- 1 pkg pkg  952 Feb  6 21:46 4eca218d56d3ccb324c25a12ccc26b1685f517f6fbab64a555593873da5bf326-other.sqlite.bz2
+-rw-rw-r-- 1 pkg pkg  820 Feb  6 21:46 7cb45c54e35d0489bc8aa0c9f6687308dac7a997aca924704bf84cfd04882420-primary.xml.gz
+-rw-rw-r-- 1 pkg pkg  414 Feb  6 21:46 9960e20513631aa4db9c5c388aeeac64d1d7ecd7d24e72f96b0764b44a42e714-other.xml.gz
+-rw-rw-r-- 1 pkg pkg 1231 Feb  6 21:46 c8d002c76177096b3b5cb3f052791a019fd24161da80e710b3f91ebe4c3ff73d-filelists.sqlite.bz2
+-rw-rw-r-- 1 pkg pkg 2127 Feb  6 21:46 e330ace136cd50c90101a2019d8d77d4aea7077fffabbbaa2d13ecf5c0cf3fdc-primary.sqlite.bz2
+-rw-rw-r-- 1 pkg pkg 2965 Feb  6 21:46 repomd.xml
+```
+
+`$` **`gzip -cd repodata/*-filelists.xml.gz`**
+```
+<?xml version="1.0" encoding="UTF-8"?>
+<filelists xmlns="http://linux.duke.edu/metadata/filelists" packages="3">
+<package pkgid="9058427c5fad93b0ad3f5d52e8b97a297ec0807691e463db34395fd35a2e661d" name="hello-world" arch="noarch">
+  <version epoch="0" ver="1.0" rel="1"/>
+  <file>/usr/bin/hello-world.sh</file>
+  <file>/usr/share/doc/hello-world-1.0/LICENSE</file>
+  <file>/usr/share/doc/hello-world-1.0/README</file>
+  <file>/usr/share/man/man1/hello-world.sh.1.gz</file>
+  <file type="dir">/usr/share/doc/hello-world-1.0</file>
+</package>
+<package pkgid="f3e1ed29f51db1b8bb77c244c0b49d0cd41022389f24bed920e3cdae92735e0a" name="hello-world" arch="noarch">
+  <version epoch="0" ver="1.0" rel="2"/>
+  <file>/usr/bin/hello-world.sh</file>
+  <file>/usr/share/doc/hello-world-1.0/LICENSE</file>
+  <file>/usr/share/doc/hello-world-1.0/README</file>
+  <file>/usr/share/man/man1/hello-world.sh.1.gz</file>
+  <file type="dir">/usr/share/doc/hello-world-1.0</file>
+</package>
+</filelists>
+```
+
+You can see that you have 2 packages referenced in your new repository, because you have made twice the build with different relaese tags.
+
+So great we have a repo, but now we'd like to test and use it. We'll do it on our own system for now. So we need to add a new repo:
+
+<!--
+`#` **`rpm -e hello-world`**
+-->
+
+`$` **`cat > /etc/yum.repos.d/hello.repo << EOF`**
+```
+[hello]
+name=Hello repo
+baseurl=file:///home/pkg/rpmbuild/RPMS
+gpgcheck=0
+```
+
+`#` **`yum install hello-world`**
+```
+Loaded plugins: fastestmirror, ovl
+hello                                                      | 2.9 kB  00:00:00     
+hello/primary_db                                           | 1.8 kB  00:00:00     
+Loading mirror speeds from cached hostfile
+ * base: repos.dfw.quadranet.com
+ * extras: repos-lax.psychz.net
+ * updates: mirror.clarkson.edu
+Resolving Dependencies
+--> Running transaction check
+---> Package hello-world.noarch 0:1.0-2 will be installed
+--> Finished Dependency Resolution
+
+Dependencies Resolved
+
+=============================================================================
+ Package              Arch            Version           Repository      Size
+=============================================================================
+Installing:
+ hello-world          noarch          1.0-2             hello           15 k
+
+Transaction Summary
+=============================================================================
+Install  1 Package
+
+Total download size: 15 k
+Installed size: 35 k
+Is this ok [y/d/N]: y
+Downloading packages:
+Running transaction check
+Running transaction test
+Transaction test succeeded
+Running transaction
+Warning: RPMDB altered outside of yum.
+  Installing : hello-world-1.0-2.noarch                                  1/1 
+  Verifying  : hello-world-1.0-2.noarch                                  1/1 
+
+Installed:
+  hello-world.noarch 0:1.0-2                                                                                                                                                                         
+
+Complete!
+```
+
+All that is nice and fine, but it would be better if it could be working also from another system. For that instead of using the file:// protocol in the configuration file, we could use http:// or ftp:// instead. As ftp is very easy to setup, let's try to do it again with his after you removed again your package ;-)
+
+`#` **`yum install vsftpd`**
+
+`#` **`systemctl start vsftpd`**
+
+`#` **`mv /home/pkg/rpmbuild/RPMS /var/ftp`**
+
+`$` **`cat > /etc/yum.repos.d/hello.repo << EOF`**
+```
+[hello]
+name=Hello repo
+baseurl=ftp://localhost/RPMS
+gpgcheck=0
+```
+
+`#` **`yum install hello-world`**
+```
+Loaded plugins: fastestmirror, ovl
+hello                                                                                                                                                                         | 2.9 kB  00:00:00     
+Loading mirror speeds from cached hostfile
+ * base: mirror.rackspace.com
+ * extras: pubmirrors.dal.corespace.com
+ * updates: repo1.dal.innoscale.net
+Resolving Dependencies
+--> Running transaction check
+---> Package hello-world.noarch 0:1.0-2 will be installed
+--> Finished Dependency Resolution
+
+Dependencies Resolved
+
+=====================================================================================================================================================================================================
+ Package                                            Arch                                          Version                                         Repository                                    Size
+=====================================================================================================================================================================================================
+Installing:
+ hello-world                                        noarch                                        1.0-2                                           hello                                         15 k
+
+Transaction Summary
+=====================================================================================================================================================================================================
+Install  1 Package
+
+Total download size: 15 k
+Installed size: 35 k
+Is this ok [y/d/N]: **y**
+Downloading packages:
+hello-world-1.0-2.noarch.rpm                                                                                                                                                  |  15 kB  00:00:00     
+Running transaction check
+Running transaction test
+Transaction test succeeded
+Running transaction
+Warning: RPMDB altered outside of yum.
+  Installing : hello-world-1.0-2.noarch                                                                                                                                                          1/1 
+  Verifying  : hello-world-1.0-2.noarch                                                                                                                                                          1/1 
+
+Installed:
+  hello-world.noarch 0:1.0-2                                                                                                                                                                         
+
+Complete!
+```
+
+There is much more to discover around the packages, for example how to GnuPG sign them, and have GnuPG signed repositories as well to improve security.
 
 This is the end of this lab for now, we hope you enjoyed it.
 
