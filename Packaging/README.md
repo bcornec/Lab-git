@@ -1701,10 +1701,6 @@ You can see that you have 2 packages referenced in your new repository, because 
 
 So great we have a repo, but now we'd like to test and use it. We'll do it on our own system for now. So we need to add a new repo:
 
-<!--
-`#` **`rpm -e hello-world`**
--->
-
 `$` **`cat > /etc/yum.repos.d/hello.repo << EOF`**
 ```
 [hello]
