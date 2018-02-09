@@ -261,7 +261,7 @@ Looks probably familiar after the **`yum info`** one, but you see you can get mo
 
 So you can get the list of all files that will be installed on your system by `rpm` that way. Let's install again the package, using `rpm` this time:
 
-`#` **`rpm -ivh nano-2.3.1-10.el7.x86_64.rpm`**
+`#` **`rpm -ivh /home/pkg/nano-2.3.1-10.el7.x86_64.rpm`**
 ```
 Preparing...                          ################################# [100%]
 Updating / installing...
@@ -403,6 +403,10 @@ cp %{SOURCE0} $RPM_BUILD_ROOT/%{_bindir}
 ```
 
 We commented the `%prep` and `%build` phases as we do not have anything to build yet. We just need to copy one file at installation time. Also we need to refer to it in the files section, so the package knows which files it manages (there is no magic, if you don't tell it, rpm won't guess).
+
+We used the %{_bindir} to describe the place to install the binary. This a rpm macro that we're just using. If you want to have an idea of rpm macros issue the following command:
+
+`$` **`rpm --showrc`**
 
 Now try to build your first package with:
 
