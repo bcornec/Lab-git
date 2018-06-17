@@ -2,15 +2,20 @@
 
 The goal of this lab is to install and use Docker to become familiar with Linux based containers and handle some of the common use cases around it.<!-- By the end of this lab you will have created a Web application comprised of a number of micro-services. -->
 
-## Lab Writers and Trainers
+## Lab Writers
   - Bruno.Cornec@hpe.com
   - Rene.Ribaud@cgi.com
+
+## Lab Trainer
+  - Rene.Ribaud@cgi.com
+  - Abdelmajid.Laachachi@cgi.com
 
 Table of Contents
 =================
 
    * [Docker Lab Contents](#docker-lab-contents)
-      * [Lab Writers and Trainers](#lab-writers-and-trainers)
+      * [Lab Writers](#lab-writers-and-trainers)
+      * [Lab Trainers](#lab-writers-and-trainers)
       * [Objectives of the Docker Lab](#objectives-of-the-docker-lab)
       * [Reference documents](#reference-documents)
       * [Note on Linux commands](#note-on-linux-commands)
@@ -24,29 +29,27 @@ Table of Contents
       * [The first container](#the-first-container)
       * [The second container](#the-second-container)
    * [Configuring owncloud in a container](#configuring-owncloud-in-a-container)
-<!--
-   * [Using Docker compose](#using-docker-compose)
-      * [Installing Docker compose](#installing-docker-compose)
-      * [Our first docker-compose.yml file](#our-first-docker-composeyml-file)
-      * [Going further with docker-compose.yml](#going-further-with-docker-composeyml)
-   * [Using docker-machine to create Docker hosts](#using-docker-machine-to-create-docker-hosts)
-   * [Using Docker Swarm](#using-docker-swarm)
-      * [Installing Docker Swarm](#installing-docker-swarm)
-      * [Installing on CentOS 7](#installing-on-centos-7)
-      * [Installing the engine in the Cloud](#installing-the-engine-in-the-cloud)
-      * [Using Docker Swarm to make our configuration available and scalable](#using-docswarm-to-make-our-configuration-available-and-scalable)
-         * [CentOS 7](#centos-7)
-         * [Ubuntu](#ubuntu)
-   * [Deploy a cloud native application.](#deploy-a-cloud-native-application)
-      * [Objectives](#objectives)
--->
+<!--    * [Using Docker compose](#using-docker-compose)--> 
+<!--       * [Installing Docker compose](#installing-docker-compose)--> 
+<!--       * [Our first docker-compose.yml file](#our-first-docker-composeyml-file)--> 
+<!--       * [Going further with docker-compose.yml](#going-further-with-docker-composeyml)--> 
+<!--    * [Using docker-machine to create Docker hosts](#using-docker-machine-to-create-docker-hosts)--> 
+<!--    * [Using Docker Swarm](#using-docker-swarm)--> 
+<!--       * [Installing Docker Swarm](#installing-docker-swarm)--> 
+<!--       * [Installing on CentOS 7](#installing-on-centos-7)--> 
+<!--       * [Installing the engine in the Cloud](#installing-the-engine-in-the-cloud)--> 
+<!--       * [Using Docker Swarm to make our configuration available and scalable](#using-docswarm-to-make-our-configuration-available-and-scalable)--> 
+<!--          * [CentOS 7](#centos-7)--> 
+<!--          * [Ubuntu](#ubuntu)--> 
+<!--    * [Deploy a cloud native application.](#deploy-a-cloud-native-application)--> 
+<!--       * [Objectives](#objectives)--> 
 
 ## Objectives of the Docker Lab
 At the end of the Lab students should be able to install Docker, use the CLI to create a new image, a container, launch an application in it, store data, configure the network.
 
 This Lab is intended to be trial and error so that during the session students should understand really what is behind the tool.  Blindly following instructions is not an effective way to learn IMHO. You've been warned ;-)
 
-Expected duration : 120 minutes
+Expected duration : 90 minutes
 
 ## Reference documents
 When dealing with the installation and configuration of Docker, the first step  is to check the reference Web site http://docker.io/:
@@ -70,7 +73,7 @@ This command will create the text file `fileToCreate` and populate it with the l
 
 You can display the content of the created file with the command `cat fileToCreate`.
 
-In order to append text to the file, the first `>` can be replaced with `>>`. 
+In order to append text to the file, the first `>` can be replaced with `>>`.
 
 If you prefer, you can edit the files using **vim** or **nano** text editors.
 
@@ -227,42 +230,97 @@ EOF
 ```
 
 `#` **`yum install docker-engine`**
-```none
-Loaded plugins: product-id, search-disabled-repos, subscription-manager
-This system is not registered to Red Hat Subscription Management. You can use subscription-manager to register.
+```
+Loaded plugins: fastestmirror
+Determining fastest mirrors
+ * base: mirror.denit.net
+ * extras: centos.mirror.triple-it.nl
+ * updates: mirrors.supportex.net
+base                                                                              | 3.6 kB  00:00:00
+dockerrepo                                                                        | 2.9 kB  00:00:00
+extras                                                                            | 3.4 kB  00:00:00
+updates                                                                           | 3.4 kB  00:00:00
+(1/5): base/7/x86_64/group_gz                                                     | 166 kB  00:00:00
+(2/5): extras/7/x86_64/primary_db                                                 | 149 kB  00:00:00
+(3/5): dockerrepo/primary_db                                                      |  34 kB  00:00:00
+(4/5): updates/7/x86_64/primary_db                                                | 2.7 MB  00:00:00
+(5/5): base/7/x86_64/primary_db                                                   | 5.9 MB  00:00:00
 Resolving Dependencies
 --> Running transaction check
----> Package docker-engine.x86_64 0:1.11.2-1.el7.centos will be installed
---> Processing Dependency: docker-engine-selinux >= 1.11.2-1.el7.centos for package: docker-engine-1.11.2-1.el7.centos.x86_64
---> Processing Dependency: libcgroup for package: docker-engine-1.11.2-1.el7.centos.x86_64
---> Processing Dependency: libltdl.so.7()(64bit) for package: docker-engine-1.11.2-1.el7.centos.x86_64
-[...]
+---> Package docker-engine.x86_64 0:17.05.0.ce-1.el7.centos will be installed
+--> Processing Dependency: docker-engine-selinux >= 17.05.0.ce-1.el7.centos for package: docker-engine-17.05.0.ce-1.el7.centos.x86_64
+--> Processing Dependency: libltdl.so.7()(64bit) for package: docker-engine-17.05.0.ce-1.el7.centos.x86_64
+--> Running transaction check
+---> Package docker-engine-selinux.noarch 0:17.05.0.ce-1.el7.centos will be installed
+---> Package libtool-ltdl.x86_64 0:2.4.2-22.el7_3 will be installed
+--> Finished Dependency Resolution
 
-============================================================================================================
- Package                        Arch                Version                   Repository               Size
-============================================================================================================
+Dependencies Resolved
+
+=========================================================================================================
+ Package                       Arch           Version                           Repository          Size
+=========================================================================================================
 Installing:
- docker-engine                  x86_64              1.11.2-1.el7.centos       dockerrepo               13 M
+ docker-engine                 x86_64         17.05.0.ce-1.el7.centos           dockerrepo          19 M
 Installing for dependencies:
- audit-libs-python              x86_64              2.4.1-5.el7               base                     69 k
- checkpolicy                    x86_64              2.1.12-6.el7              base                    247 k
- docker-engine-selinux          noarch              1.11.2-1.el7.centos       dockerrepo               28 k
- libcgroup                      x86_64              0.41-8.el7                base                     64 k
- libsemanage-python             x86_64              2.1.10-18.el7             base                     94 k
- libtool-ltdl                   x86_64              2.4.2-20.el7              base                     49 k
- policycoreutils-python         x86_64              2.2.5-20.el7              base                    435 k
- python-IPy                     noarch              0.75-6.el7                base                     32 k
- setools-libs                   x86_64              3.3.7-46.el7              base                    485 k
+ docker-engine-selinux         noarch         17.05.0.ce-1.el7.centos           dockerrepo          28 k
+ libtool-ltdl                  x86_64         2.4.2-22.el7_3                    base                49 k
 
 Transaction Summary
-============================================================================================================
-Install  1 Package (+9 Dependent packages)
+=========================================================================================================
+Install  1 Package (+2 Dependent packages)
 
-Total download size: 15 M
-Installed size: 59 M
+Total download size: 20 M
+Installed size: 70 M
 Is this ok [y/d/N]: y
-Downloading packages:.
-[...]
+Downloading packages:
+warning: /var/cache/yum/x86_64/7/base/packages/libtool-ltdl-2.4.2-22.el7_3.x86_64.rpm: Header V3 RSA/SHA256 Signature, key ID f4a80eb5: NOKEY
+Public key for libtool-ltdl-2.4.2-22.el7_3.x86_64.rpm is not installed
+(1/3): libtool-ltdl-2.4.2-22.el7_3.x86_64.rpm                                     |  49 kB  00:00:00
+warning: /var/cache/yum/x86_64/7/dockerrepo/packages/docker-engine-selinux-17.05.0.ce-1.el7.centos.noarch.rpm: Header V4 RSA/SHA512 Signature, key ID 2c52609d: NOKEY
+Public key for docker-engine-selinux-17.05.0.ce-1.el7.centos.noarch.rpm is not installed
+(2/3): docker-engine-selinux-17.05.0.ce-1.el7.centos.noarch.rpm                   |  28 kB  00:00:00
+(3/3): docker-engine-17.05.0.ce-1.el7.centos.x86_64.rpm                           |  19 MB  00:00:00
+---------------------------------------------------------------------------------------------------------
+Total                                                                     23 MB/s |  20 MB  00:00:00
+Retrieving key from file:///etc/pki/rpm-gpg/RPM-GPG-KEY-CentOS-7
+Importing GPG key 0xF4A80EB5:
+ Userid     : "CentOS-7 Key (CentOS 7 Official Signing Key) <security@centos.org>"
+ Fingerprint: 6341 ab27 53d7 8a78 a7c2 7bb1 24c6 a8a7 f4a8 0eb5
+ Package    : centos-release-7-5.1804.el7.centos.x86_64 (installed)
+ From       : /etc/pki/rpm-gpg/RPM-GPG-KEY-CentOS-7
+Is this ok [y/N]: y
+Retrieving key from https://yum.dockerproject.org/gpg
+Importing GPG key 0x2C52609D:
+ Userid     : "Docker Release Tool (releasedocker) <docker@docker.com>"
+ Fingerprint: 5811 8e89 f3a9 1289 7c07 0adb f762 2157 2c52 609d
+ From       : https://yum.dockerproject.org/gpg
+Is this ok [y/N]: y
+Running transaction check
+Running transaction test
+Transaction test succeeded
+Running transaction
+  Installing : docker-engine-selinux-17.05.0.ce-1.el7.centos.noarch                                  1/3
+Re-declaration of type docker_t
+Failed to create node
+Bad type declaration at /etc/selinux/targeted/tmp/modules/400/docker/cil:1
+/usr/sbin/semodule:  Failed!
+restorecon:  lstat(/var/lib/docker) failed:  No such file or directory
+warning: %post(docker-engine-selinux-17.05.0.ce-1.el7.centos.noarch) scriptlet failed, exit status 255
+Non-fatal POSTIN scriptlet failure in rpm package docker-engine-selinux-17.05.0.ce-1.el7.centos.noarch
+  Installing : libtool-ltdl-2.4.2-22.el7_3.x86_64                                                    2/3
+  Installing : docker-engine-17.05.0.ce-1.el7.centos.x86_64                                          3/3
+  Verifying  : libtool-ltdl-2.4.2-22.el7_3.x86_64                                                    1/3
+  Verifying  : docker-engine-17.05.0.ce-1.el7.centos.x86_64                                          2/3
+  Verifying  : docker-engine-selinux-17.05.0.ce-1.el7.centos.noarch                                  3/3
+
+Installed:
+  docker-engine.x86_64 0:17.05.0.ce-1.el7.centos
+
+Dependency Installed:
+  docker-engine-selinux.noarch 0:17.05.0.ce-1.el7.centos       libtool-ltdl.x86_64 0:2.4.2-22.el7_3
+
+Complete!
 ```
 
 
@@ -370,7 +428,7 @@ For more examples and ideas, visit:
  http://docs.docker.com/userguide/
 ```
 
-So we've got a success! Of course, we do not really go far, but what can you expect from an hello-world example ;-) 
+So we've got a success! Of course, we do not really go far, but what can you expect from an hello-world example ;-)
 
 However, we can get some info on our modified Docker environment:
 
@@ -481,7 +539,7 @@ Linux ad9b474525d0 3.16.0-41-generic #57~14.04.1-Ubuntu SMP Thu Jun 18 18:01:13 
 ```
 If you're on a CentOS distribution it will rather be:
 ```
-Linux ad9b474525d0 3.10.0-327.el7.x86_64 #1 SMP Thu Oct 29 17:29:29 EDT 2015 x86_64 x86_64 x86_64 GNU/Linux
+Linux centos-s-1vcpu-1gb-ams3-01 3.10.0-862.2.3.el7.x86_64 #1 SMP Wed May 9 18:05:47 UTC 2018 x86_64 x86_64 x86_64 GNU/Linux
 ```
 
 
