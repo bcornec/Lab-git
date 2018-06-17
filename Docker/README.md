@@ -12,7 +12,6 @@ The goal of this lab is to install and use Docker to become familiar with Linux 
 
 Table of Contents
 =================
-
    * [Docker Lab Contents](#docker-lab-contents)
       * [Lab Writers](#lab-writers-and-trainers)
       * [Lab Trainers](#lab-writers-and-trainers)
@@ -20,7 +19,6 @@ Table of Contents
       * [Reference documents](#reference-documents)
       * [Note on Linux commands](#note-on-linux-commands)
    * [Environment setup](#environment-setup)
-<!--      * [Proxy consideration](#proxy-consideration) -->
       * [Docker installation](#docker-installation)
          * [Ubuntu installation](#ubuntu-installation)
          * [CentOS installation](#centos-installation)
@@ -29,6 +27,23 @@ Table of Contents
       * [The first container](#the-first-container)
       * [The second container](#the-second-container)
    * [Configuring owncloud in a container](#configuring-owncloud-in-a-container)
+
+<!--    * [Docker Lab Contents](#docker-lab-contents)--> 
+<!--       * [Lab Writers](#lab-writers-and-trainers)--> 
+<!--       * [Lab Trainers](#lab-writers-and-trainers)--> 
+<!--       * [Objectives of the Docker Lab](#objectives-of-the-docker-lab)--> 
+<!--       * [Reference documents](#reference-documents)--> 
+<!--       * [Note on Linux commands](#note-on-linux-commands)--> 
+<!--    * [Environment setup](#environment-setup)--> 
+<!--       * [Proxy consideration](#proxy-consideration)--> 
+<!--       * [Docker installation](#docker-installation)--> 
+<!--          * [Ubuntu installation](#ubuntu-installation)--> 
+<!--          * [CentOS installation](#centos-installation)--> 
+<!--          * [Check installation](#check-installation)--> 
+<!--    * [Using Docker](#using-docker)--> 
+<!--       * [The first container](#the-first-container)--> 
+<!--       * [The second container](#the-second-container)--> 
+<!--    * [Configuring owncloud in a container](#configuring-owncloud-in-a-container)--> 
 <!--    * [Using Docker compose](#using-docker-compose)--> 
 <!--       * [Installing Docker compose](#installing-docker-compose)--> 
 <!--       * [Our first docker-compose.yml file](#our-first-docker-composeyml-file)--> 
