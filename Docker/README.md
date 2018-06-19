@@ -872,7 +872,11 @@ Hint, you probably need to add the owncloud dependencies to be able to launch it
 
 **`RUN yum install -y php php-dom php-mbstring php-pdo php-gd`**
 
-With that you should be able to use owncloud ! (Note that you need to use that version with CentOS 6 for a PHP dependency management) But we're not done yet !!!
+With that you should be able to use owncloud ! (Note that you need to use that version with CentOS 6 for a PHP dependency management) 
+
+![Owncloud setup](/Docker/img/owncloud_setup.png)
+
+But we're not done yet !!!
 If you log on to your owncloud instance, and start customizing it (login/passwd for admin, storage path), you'll have errors first, that we'll fix later on and then if you `Docker stop` and `Docker rm` the container to relaunch it again, of course, none of this customization will be kept as it's not part of your container content.
 
 So we now have to deal with storage management for our Docker container. First we need to solve the error generated when you tried to configure your owncloud instance. We had rights issues. Use the following command to help solve the issue:
