@@ -1,21 +1,24 @@
 # Docker Lab Contents
 
-The goal of this lab is to install and use Docker to become familiar with Linux based containers and handle some of the common use cases around it. By the end of this lab you will have created a Web application comprised of a number of micro-services.
+The goal of this lab is to install and use Docker to become familiar with Linux based containers and handle some of the common use cases around it.<!-- By the end of this lab you will have created a Web application comprised of a number of micro-services. -->
 
-## Lab Writers and Trainers
+## Lab Writers
   - Bruno.Cornec@hpe.com
-  - Rene.Ribaud@hpe.com
+  - Rene.Ribaud@cgi.com
+
+## Lab Trainer
+  - Rene.Ribaud@cgi.com
+  - Abdelmajid.Laachachi@cgi.com
 
 Table of Contents
 =================
-
    * [Docker Lab Contents](#docker-lab-contents)
-      * [Lab Writers and Trainers](#lab-writers-and-trainers)
+      * [Lab Writers](#lab-writers-and-trainers)
+      * [Lab Trainers](#lab-writers-and-trainers)
       * [Objectives of the Docker Lab](#objectives-of-the-docker-lab)
       * [Reference documents](#reference-documents)
       * [Note on Linux commands](#note-on-linux-commands)
    * [Environment setup](#environment-setup)
-      * [Proxy consideration](#proxy-consideration)
       * [Docker installation](#docker-installation)
          * [Ubuntu installation](#ubuntu-installation)
          * [CentOS installation](#centos-installation)
@@ -24,27 +27,44 @@ Table of Contents
       * [The first container](#the-first-container)
       * [The second container](#the-second-container)
    * [Configuring owncloud in a container](#configuring-owncloud-in-a-container)
-   * [Using Docker compose](#using-docker-compose)
-      * [Installing Docker compose](#installing-docker-compose)
-      * [Our first docker-compose.yml file](#our-first-docker-composeyml-file)
-      * [Going further with docker-compose.yml](#going-further-with-docker-composeyml)
-   * [Using docker-machine to create Docker hosts](#using-docker-machine-to-create-docker-hosts)
-   * [Using Docker Swarm](#using-docker-swarm)
-      * [Installing Docker Swarm](#installing-docker-swarm)
-      * [Installing on CentOS 7](#installing-on-centos-7)
-      * [Installing the engine in the Cloud](#installing-the-engine-in-the-cloud)
-      * [Using Docker Swarm to make our configuration available and scalable](#using-docker-swarm-to-make-our-configuration-available-and-scalable)
-         * [CentOS 7](#centos-7)
-         * [Ubuntu](#ubuntu)
-   * [Deploy a cloud native application.](#deploy-a-cloud-native-application)
-      * [Objectives](#objectives)
+
+<!--    * [Docker Lab Contents](#docker-lab-contents)--> 
+<!--       * [Lab Writers](#lab-writers-and-trainers)--> 
+<!--       * [Lab Trainers](#lab-writers-and-trainers)--> 
+<!--       * [Objectives of the Docker Lab](#objectives-of-the-docker-lab)--> 
+<!--       * [Reference documents](#reference-documents)--> 
+<!--       * [Note on Linux commands](#note-on-linux-commands)--> 
+<!--    * [Environment setup](#environment-setup)--> 
+<!--       * [Proxy consideration](#proxy-consideration)--> 
+<!--       * [Docker installation](#docker-installation)--> 
+<!--          * [Ubuntu installation](#ubuntu-installation)--> 
+<!--          * [CentOS installation](#centos-installation)--> 
+<!--          * [Check installation](#check-installation)--> 
+<!--    * [Using Docker](#using-docker)--> 
+<!--       * [The first container](#the-first-container)--> 
+<!--       * [The second container](#the-second-container)--> 
+<!--    * [Configuring owncloud in a container](#configuring-owncloud-in-a-container)--> 
+<!--    * [Using Docker compose](#using-docker-compose)--> 
+<!--       * [Installing Docker compose](#installing-docker-compose)--> 
+<!--       * [Our first docker-compose.yml file](#our-first-docker-composeyml-file)--> 
+<!--       * [Going further with docker-compose.yml](#going-further-with-docker-composeyml)--> 
+<!--    * [Using docker-machine to create Docker hosts](#using-docker-machine-to-create-docker-hosts)--> 
+<!--    * [Using Docker Swarm](#using-docker-swarm)--> 
+<!--       * [Installing Docker Swarm](#installing-docker-swarm)--> 
+<!--       * [Installing on CentOS 7](#installing-on-centos-7)--> 
+<!--       * [Installing the engine in the Cloud](#installing-the-engine-in-the-cloud)--> 
+<!--       * [Using Docker Swarm to make our configuration available and scalable](#using-docswarm-to-make-our-configuration-available-and-scalable)--> 
+<!--          * [CentOS 7](#centos-7)--> 
+<!--          * [Ubuntu](#ubuntu)--> 
+<!--    * [Deploy a cloud native application.](#deploy-a-cloud-native-application)--> 
+<!--       * [Objectives](#objectives)--> 
 
 ## Objectives of the Docker Lab
 At the end of the Lab students should be able to install Docker, use the CLI to create a new image, a container, launch an application in it, store data, configure the network.
 
 This Lab is intended to be trial and error so that during the session students should understand really what is behind the tool.  Blindly following instructions is not an effective way to learn IMHO. You've been warned ;-)
 
-Expected duration : 120 minutes
+Expected duration : 90 minutes
 
 ## Reference documents
 When dealing with the installation and configuration of Docker, the first step  is to check the reference Web site http://docker.io/:
@@ -68,10 +88,12 @@ This command will create the text file `fileToCreate` and populate it with the l
 
 You can display the content of the created file with the command `cat fileToCreate`.
 
-In order to append text to the file, the first `>` can be replaced with `>>`.  
+In order to append text to the file, the first `>` can be replaced with `>>`.
 
 If you prefer, you can edit the files using **vim** or **nano** text editors.
 
+
+<!--
 ## But I'm a poor lonesome Windows cowboy !
 
 Well in that case, first condolences, then read the fine document made by Michael Mayer at https://github.com/bcornec/Labs/blob/master/Docker/LabOnWindows.md to get help.
@@ -83,7 +105,7 @@ Estimated time: 15 minutes
 
 Please refer to the instructions available at https://github.com/bcornec/Labs/blob/master/ENVIRONMENT.md
 
-Note that Docker is also providing the possibility to have a web based access to an on demand infrastructure for 4 hours. This is available at http://play-with-docker.com. Check that as a fallback you can use it and create up to 5 nodes with it. Beomce familiar to use this or your platform of choice for the rest of the Lab.
+Note that Docker is also providing the possibility to have a web based access to an on demand infrastructure for 4 hours. This is available at http://play-with-docker.com. Check that as a fallback you can use it and create up to 5 nodes with it. Become familiar to use this or your platform of choice for the rest of the Lab.
 
 ## Proxy consideration
 
@@ -102,17 +124,18 @@ export https_proxy=http://<proxy name or ip>:<proxy port>
 ```
 
  4. Configure Docker daemon to use the proxy as explained by this document: https://docs.docker.com/engine/admin/systemd/#http-proxy (in short add Environment="HTTP_PROXY=http://proxy.example.com:80/" "HTTPS_PROXY=http://proxy.example.com:80/" to your [services] section)
- 5. **Set the proxy in each of your Dockerfiles** by adding following text as the 2nd and 3rd line of the Dockerfile.
+ 5. Build Dockerfile with the appropriate arguments.
 
 ```
-ENV http_proxy <HTTP_PROXY>
-ENV https_proxy <HTTP_PROXY>
+docker build --build-arg http_proxy=http://<proxy name or ip>:<proxy port> https_proxy=http://<proxy name or ip>:<proxy port> .
 ```
 
-
+Documentation details :
+https://docs.docker.com/engine/reference/builder/#arg
+-->
 ## Docker installation
 Docker is available externally from http://docs.docker.com/linux/step_one/ or using your distribution packages, or from github at https://github.com/docker/docker
-Version 17.03 is the current stable release. This lab requires at least version 1.7.
+Version 18.03 is the current stable release. This lab requires at least version 1.7.
 
 Ask to your instructor which Linux distribution will be used for the Lab (Ubuntu or CentOS). Then refer to the corresponding instructions below.
 
@@ -121,62 +144,77 @@ Other distributions should be as easy to deal with once the same packages have b
 ### Ubuntu installation
 If you work on an Ubuntu environment for the Lab, you may want to use apt to do the installation of Docker with all its dependencies. As Ubuntu provides an old version of Docker, we will use a PPA providing a more up to date version:
 
-#### 17.04
+#### 16.04
 
-`#` **`sudo apt-get update`**
+`#` **`sudo apt update`**
 
-`#` **`sudo apt-get install apt-transport-https ca-certificates curl software-properties-common`**
+`#` **`sudo apt install apt-transport-https ca-certificates curl software-properties-common`**
 
 `#` **`curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -`**
 
-`#` **`sudo add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu zesty stable"`**
+`#` `sudo add-apt-repository \
+   "deb [arch=amd64] https://download.docker.com/linux/ubuntu \
+   $(lsb_release -cs) \
+   stable"`
 
-Note: (instead of 17.04 use  $(lsb_release -cs) for another version
+`#` **`sudo apt update`**
 
-`#` **`sudo apt-get update`**
+`#` **` sudo apt install docker-ce`**
 
-`#` **` sudo apt-get install docker-ce`**
-
-#### 14.04
-
-`#` **`apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv-keys 36A1D7869245C8950F966E92D8576A8BA88D21E9`**
-
-`#` **`echo deb https://get.docker.io/ubuntu docker main > /etc/apt/sources.list.d/Docker.list`**
-
-`#` **`apt-get update`**
-
-`#` **`apt-get install lxc-docker`**
 ```
 Reading package lists... Done
-Building dependency tree
+Building dependency tree       
 Reading state information... Done
-The following extra packages will be installed:
-  aufs-tools cgroup-lite git git-man liberror-perl patch
+The following package was automatically installed and is no longer required:
+  grub-pc-bin
+Use 'sudo apt autoremove' to remove it.
+The following additional packages will be installed:
+  aufs-tools cgroupfs-mount libltdl7 pigz
 Suggested packages:
-  btrfs-tools debootstrap lxc rinse git-daemon-run git-daemon-sysvinit git-doc
-  git-el git-email git-gui gitk gitweb git-arch git-bzr git-cvs git-mediawiki
-  git-svn diffutils-doc
+  mountall
 The following NEW packages will be installed:
-  aufs-tools cgroup-lite lxc-docker git git-man liberror-perl patch
-0 upgraded, 7 newly installed, 0 to remove and 0 not upgraded.
-Need to get 7,640 kB of archives.
-After this operation, 46.9 MB of additional disk space will be used.
+  aufs-tools cgroupfs-mount docker-ce libltdl7 pigz
+0 upgraded, 5 newly installed, 0 to remove and 32 not upgraded.
+Need to get 34.2 MB of archives.
+After this operation, 182 MB of additional disk space will be used.
 Do you want to continue? [Y/n] y
-Get:1 http://fr.archive.ubuntu.com/ubuntu/ trusty/universe aufs-tools amd64 1:3.2+20130722-1.1 [92.3 kB]
-Get:2 https://get.docker.io/ubuntu/ docker/main lxc-docker-1.7.0 amd64 1.7.0 [4,962 kB]
-[...]
-Fetched 7,640 kB in 8s (884 kB/s)
+Get:1 http://lon1.mirrors.digitalocean.com/ubuntu xenial/universe amd64 pigz amd64 2.3.1-2 [61.1 kB]
+Get:2 http://lon1.mirrors.digitalocean.com/ubuntu xenial/universe amd64 aufs-tools amd64 1:3.2+20130722-1.1ubuntu1 [92.9 kB]
+Get:3 https://download.docker.com/linux/ubuntu xenial/stable amd64 docker-ce amd64 18.03.1~ce-0~ubuntu [34.0 MB]
+Get:4 http://lon1.mirrors.digitalocean.com/ubuntu xenial/universe amd64 cgroupfs-mount all 1.2 [4,970 B]
+Get:5 http://lon1.mirrors.digitalocean.com/ubuntu xenial/main amd64 libltdl7 amd64 2.4.6-0.1 [38.3 kB]
+Fetched 34.2 MB in 1s (31.9 MB/s)                                      
+Selecting previously unselected package pigz.
+(Reading database ... 54428 files and directories currently installed.)
+Preparing to unpack .../pigz_2.3.1-2_amd64.deb ...
+Unpacking pigz (2.3.1-2) ...
 Selecting previously unselected package aufs-tools.
-(Reading database ... 54255 files and directories currently installed.)
-Preparing to unpack .../aufs-tools_1%3a3.2+20130722-1.1_amd64.deb ...
-Unpacking aufs-tools (1:3.2+20130722-1.1) ...
-[...]
-Setting up lxc-docker (1.7.0) ...
-Adding group docker' (GID 111) ...
-Done.
-[...]
+Preparing to unpack .../aufs-tools_1%3a3.2+20130722-1.1ubuntu1_amd64.deb ...
+Unpacking aufs-tools (1:3.2+20130722-1.1ubuntu1) ...
+Selecting previously unselected package cgroupfs-mount.
+Preparing to unpack .../cgroupfs-mount_1.2_all.deb ...
+Unpacking cgroupfs-mount (1.2) ...
+Selecting previously unselected package libltdl7:amd64.
+Preparing to unpack .../libltdl7_2.4.6-0.1_amd64.deb ...
+Unpacking libltdl7:amd64 (2.4.6-0.1) ...
+Selecting previously unselected package docker-ce.
+Preparing to unpack .../docker-ce_18.03.1~ce-0~ubuntu_amd64.deb ...
+Unpacking docker-ce (18.03.1~ce-0~ubuntu) ...
+Processing triggers for man-db (2.7.5-1) ...
+Processing triggers for libc-bin (2.23-0ubuntu10) ...
+Processing triggers for ureadahead (0.100.0-19) ...
+Processing triggers for systemd (229-4ubuntu21.2) ...
+Setting up pigz (2.3.1-2) ...
+Setting up aufs-tools (1:3.2+20130722-1.1ubuntu1) ...
+Setting up cgroupfs-mount (1.2) ...
+Setting up libltdl7:amd64 (2.4.6-0.1) ...
+Setting up docker-ce (18.03.1~ce-0~ubuntu) ...
+Processing triggers for libc-bin (2.23-0ubuntu10) ...
+Processing triggers for systemd (229-4ubuntu21.2) ...
+Processing triggers for ureadahead (0.100.0-19) ...
 ```
 
+<!--
 ### Debian installation
 
 Docker is providing deb packages to help you install the Engine on your Debian distribution:
@@ -190,7 +228,7 @@ Docker is providing deb packages to help you install the Engine on your Debian d
 `#` **`apt-get install docker-engine`**
 
 This procedure should also work for Ubuntu based distributions.
-
+-->
 ### CentOS installation
 
 If you work on a CentOS 7 environment for the Lab, you may want to use yum to do the installation of Docker with all its dependencies. Add the repo provided by the Docker project (which is requiring 7.2 at least, but not by CentOS if you use that variant):
@@ -207,91 +245,166 @@ EOF
 ```
 
 `#` **`yum install docker-engine`**
-```none
-Loaded plugins: product-id, search-disabled-repos, subscription-manager
-This system is not registered to Red Hat Subscription Management. You can use subscription-manager to register.
+```
+Loaded plugins: fastestmirror
+Determining fastest mirrors
+ * base: mirror.denit.net
+ * extras: centos.mirror.triple-it.nl
+ * updates: mirrors.supportex.net
+base                                                                              | 3.6 kB  00:00:00
+dockerrepo                                                                        | 2.9 kB  00:00:00
+extras                                                                            | 3.4 kB  00:00:00
+updates                                                                           | 3.4 kB  00:00:00
+(1/5): base/7/x86_64/group_gz                                                     | 166 kB  00:00:00
+(2/5): extras/7/x86_64/primary_db                                                 | 149 kB  00:00:00
+(3/5): dockerrepo/primary_db                                                      |  34 kB  00:00:00
+(4/5): updates/7/x86_64/primary_db                                                | 2.7 MB  00:00:00
+(5/5): base/7/x86_64/primary_db                                                   | 5.9 MB  00:00:00
 Resolving Dependencies
 --> Running transaction check
----> Package docker-engine.x86_64 0:1.11.2-1.el7.centos will be installed
---> Processing Dependency: docker-engine-selinux >= 1.11.2-1.el7.centos for package: docker-engine-1.11.2-1.el7.centos.x86_64
---> Processing Dependency: libcgroup for package: docker-engine-1.11.2-1.el7.centos.x86_64
---> Processing Dependency: libltdl.so.7()(64bit) for package: docker-engine-1.11.2-1.el7.centos.x86_64
-[...]
+---> Package docker-engine.x86_64 0:17.05.0.ce-1.el7.centos will be installed
+--> Processing Dependency: docker-engine-selinux >= 17.05.0.ce-1.el7.centos for package: docker-engine-17.05.0.ce-1.el7.centos.x86_64
+--> Processing Dependency: libltdl.so.7()(64bit) for package: docker-engine-17.05.0.ce-1.el7.centos.x86_64
+--> Running transaction check
+---> Package docker-engine-selinux.noarch 0:17.05.0.ce-1.el7.centos will be installed
+---> Package libtool-ltdl.x86_64 0:2.4.2-22.el7_3 will be installed
+--> Finished Dependency Resolution
 
-============================================================================================================
- Package                        Arch                Version                   Repository               Size
-============================================================================================================
+Dependencies Resolved
+
+=========================================================================================================
+ Package                       Arch           Version                           Repository          Size
+=========================================================================================================
 Installing:
- docker-engine                  x86_64              1.11.2-1.el7.centos       dockerrepo               13 M
+ docker-engine                 x86_64         17.05.0.ce-1.el7.centos           dockerrepo          19 M
 Installing for dependencies:
- audit-libs-python              x86_64              2.4.1-5.el7               base                     69 k
- checkpolicy                    x86_64              2.1.12-6.el7              base                    247 k
- docker-engine-selinux          noarch              1.11.2-1.el7.centos       dockerrepo               28 k
- libcgroup                      x86_64              0.41-8.el7                base                     64 k
- libsemanage-python             x86_64              2.1.10-18.el7             base                     94 k
- libtool-ltdl                   x86_64              2.4.2-20.el7              base                     49 k
- policycoreutils-python         x86_64              2.2.5-20.el7              base                    435 k
- python-IPy                     noarch              0.75-6.el7                base                     32 k
- setools-libs                   x86_64              3.3.7-46.el7              base                    485 k
+ docker-engine-selinux         noarch         17.05.0.ce-1.el7.centos           dockerrepo          28 k
+ libtool-ltdl                  x86_64         2.4.2-22.el7_3                    base                49 k
 
 Transaction Summary
-============================================================================================================
-Install  1 Package (+9 Dependent packages)
+=========================================================================================================
+Install  1 Package (+2 Dependent packages)
 
-Total download size: 15 M
-Installed size: 59 M
+Total download size: 20 M
+Installed size: 70 M
 Is this ok [y/d/N]: y
-Downloading packages:.
-[...]
+Downloading packages:
+warning: /var/cache/yum/x86_64/7/base/packages/libtool-ltdl-2.4.2-22.el7_3.x86_64.rpm: Header V3 RSA/SHA256 Signature, key ID f4a80eb5: NOKEY
+Public key for libtool-ltdl-2.4.2-22.el7_3.x86_64.rpm is not installed
+(1/3): libtool-ltdl-2.4.2-22.el7_3.x86_64.rpm                                     |  49 kB  00:00:00
+warning: /var/cache/yum/x86_64/7/dockerrepo/packages/docker-engine-selinux-17.05.0.ce-1.el7.centos.noarch.rpm: Header V4 RSA/SHA512 Signature, key ID 2c52609d: NOKEY
+Public key for docker-engine-selinux-17.05.0.ce-1.el7.centos.noarch.rpm is not installed
+(2/3): docker-engine-selinux-17.05.0.ce-1.el7.centos.noarch.rpm                   |  28 kB  00:00:00
+(3/3): docker-engine-17.05.0.ce-1.el7.centos.x86_64.rpm                           |  19 MB  00:00:00
+---------------------------------------------------------------------------------------------------------
+Total                                                                     23 MB/s |  20 MB  00:00:00
+Retrieving key from file:///etc/pki/rpm-gpg/RPM-GPG-KEY-CentOS-7
+Importing GPG key 0xF4A80EB5:
+ Userid     : "CentOS-7 Key (CentOS 7 Official Signing Key) <security@centos.org>"
+ Fingerprint: 6341 ab27 53d7 8a78 a7c2 7bb1 24c6 a8a7 f4a8 0eb5
+ Package    : centos-release-7-5.1804.el7.centos.x86_64 (installed)
+ From       : /etc/pki/rpm-gpg/RPM-GPG-KEY-CentOS-7
+Is this ok [y/N]: y
+Retrieving key from https://yum.dockerproject.org/gpg
+Importing GPG key 0x2C52609D:
+ Userid     : "Docker Release Tool (releasedocker) <docker@docker.com>"
+ Fingerprint: 5811 8e89 f3a9 1289 7c07 0adb f762 2157 2c52 609d
+ From       : https://yum.dockerproject.org/gpg
+Is this ok [y/N]: y
+Running transaction check
+Running transaction test
+Transaction test succeeded
+Running transaction
+  Installing : docker-engine-selinux-17.05.0.ce-1.el7.centos.noarch                                  1/3
+Re-declaration of type docker_t
+Failed to create node
+Bad type declaration at /etc/selinux/targeted/tmp/modules/400/docker/cil:1
+/usr/sbin/semodule:  Failed!
+restorecon:  lstat(/var/lib/docker) failed:  No such file or directory
+warning: %post(docker-engine-selinux-17.05.0.ce-1.el7.centos.noarch) scriptlet failed, exit status 255
+Non-fatal POSTIN scriptlet failure in rpm package docker-engine-selinux-17.05.0.ce-1.el7.centos.noarch
+  Installing : libtool-ltdl-2.4.2-22.el7_3.x86_64                                                    2/3
+  Installing : docker-engine-17.05.0.ce-1.el7.centos.x86_64                                          3/3
+  Verifying  : libtool-ltdl-2.4.2-22.el7_3.x86_64                                                    1/3
+  Verifying  : docker-engine-17.05.0.ce-1.el7.centos.x86_64                                          2/3
+  Verifying  : docker-engine-selinux-17.05.0.ce-1.el7.centos.noarch                                  3/3
+
+Installed:
+  docker-engine.x86_64 0:17.05.0.ce-1.el7.centos
+
+Dependency Installed:
+  docker-engine-selinux.noarch 0:17.05.0.ce-1.el7.centos       libtool-ltdl.x86_64 0:2.4.2-22.el7_3
+
+Complete!
 ```
 
-`#` **`systemctl start docker`**
 
 ### Check installation
+`#` **`systemctl start docker`**
+
+`#` **`systemctl status docker`**
 
 Check that the correct version is installed and operational:
 
 `#` **`docker --version`**
 ```
-Docker version 1.11.2, build b9f10c9
+Docker version 18.05.0-ce, build f150324
 ```
+Note : The version could be different on your system.
+
+
 `#` **`docker info`**
 ```
+Docker version 18.03.1-ce, build 9ee9f40
+root@ubuntu-s-1vcpu-1gb-ams3-01:~# docker info
 Containers: 0
  Running: 0
  Paused: 0
  Stopped: 0
 Images: 0
-Server Version: 1.11.2
-Storage Driver: devicemapper
- Pool Name: docker-253:2-130978-pool
- Pool Blocksize: 65.54 kB
- Base Device Size: 10.74 GB
- Backing Filesystem: xfs
- Data file: /dev/loop0
- Metadata file: /dev/loop1
- Data Space Used: 11.8 MB
- Data Space Total: 107.4 GB
-[...]
+Server Version: 18.03.1-ce
+Storage Driver: overlay2
+ Backing Filesystem: extfs
+ Supports d_type: true
+ Native Overlay Diff: true
+Logging Driver: json-file
 Cgroup Driver: cgroupfs
 Plugins:
  Volume: local
- Network: null host bridge
-Kernel Version: 3.10.0-327.el7.x86_64
-Operating System: Red Hat Enterprise Linux Server 7.2 (Maipo)
+ Network: bridge host macvlan null overlay
+ Log: awslogs fluentd gcplogs gelf journald json-file logentries splunk syslog
+Swarm: inactive
+Runtimes: runc
+Default Runtime: runc
+Init Binary: docker-init
+containerd version: 773c489c9c1b21a6d78b5c538cd395416ec50f88
+runc version: 4fc53a81fb7c994640722ac585fa9ca548971871
+init version: 949e6fa
+Security Options:
+ apparmor
+ seccomp
+  Profile: default
+Kernel Version: 4.4.0-127-generic
+Operating System: Ubuntu 16.04.4 LTS
 OSType: linux
 Architecture: x86_64
-CPUs: 6
-Total Memory: 15.39 GiB
-Name: lab3.labossi.hpintelco.org
-ID: JFU6:LTUL:UOB2:4NEE:IZFC:FZK7:INUC:7ABM:JRVG:NQOS:VSXH:4XMG
+CPUs: 1
+Total Memory: 992.2MiB
+Name: ubuntu-s-1vcpu-1gb-ams3-01
+ID: S4G4:D455:RMO3:2ZWS:5YIU:YUBE:HJFY:WEX2:CVUX:C6ZB:T3HS:X4M2
 Docker Root Dir: /var/lib/docker
-Debug mode (client): false
-Debug mode (server): false
+Debug Mode (client): false
+Debug Mode (server): false
 Registry: https://index.docker.io/v1/
-WARNING: bridge-nf-call-iptables is disabled
-WARNING: bridge-nf-call-ip6tables is disabled
+Labels:
+Experimental: false
+Insecure Registries:
+ 127.0.0.0/8
+Live Restore Enabled: false
+
+WARNING: No swap limit support
 ```
+
 `#` **`docker `**
 
 [Display online help]
@@ -330,16 +443,18 @@ For more examples and ideas, visit:
  http://docs.docker.com/userguide/
 ```
 
-So we've got a success! Of course, we do not really go far, but what can you expect from an hello-world example ;-) 
+So we've got a success! Of course, we do not really go far, but what can you expect from an hello-world example ;-)
 
 However, we can get some info on our modified Docker environment:
 
-`#` **`docker images`**
+`#` **`docker images`** or `docker image ls`
+
+Note : Command line has been refined in order to be more conscistant, the first command is the legacy one. The second command is the new behavior.
 ```
 REPOSITORY     TAG            IMAGE ID       CREATED          VIRTUAL SIZE
 hello-world    latest         91c95931e552   10 weeks ago     910 B
 ```
-`#` **`docker ps -a`**
+`#` **`docker ps -a`** or `docker container ls -a`
 ```
 CONTAINER ID        IMAGE               COMMAND             CREATED             STATUS              PORTS               NAMES
 4dba332aec93d        hello-world         "/hello"            14 minutes ago      Exited (0) 14 minutes ago                       cocky_hopper
@@ -364,18 +479,17 @@ In order to have a more interesting environment, we'll now look for existing con
 
 `#` **`docker search fedora`**
 ```
-NAME         DESCRIPTION                    STARS    OFFICIAL  AUTOMATED
-fedora       Official Fedora 22 base image  175      [OK]
-tutum/fedora Fedora image with SSH access.  7                  [OK]
+NAME                                 DESCRIPTION                                     STARS               OFFICIAL            AUTOMATED
+fedora                               Official Docker builds of Fedora                665                 [OK]
+mattdm/fedora                        A basic Fedora image corresponding roughly t…   49
 [...]
 ```
 `#` **`docker pull fedora`**
 ```
-latest: Pulling from fedora
-48ecf305d2cf: Pull complete
-ded7cd95e059: Already exists
-fedora:latest: The image you are pulling has been verified. Important: image verification is a tech preview feature and should not be relied on to provide security.
-Digest: sha256:10ba981a70632d7764c21deae25c6521db6d39730e1dd8caff90719013858a7b
+Using default tag: latest
+latest: Pulling from library/fedora
+e71c36a80ba9: Pull complete
+Digest: sha256:7ae08e5637170eb47c01e315b6e64e0d48c6200d2942c695d0bee61b38c65b39
 Status: Downloaded newer image for fedora:latest
 ```
 
@@ -383,62 +497,53 @@ Once the container image has been downloaded we can view it in our catalog of im
 
 `#` **`docker images`**
 ```
-REPOSITORY    TAG        IMAGE ID          CREATED            VIRTUAL SIZE
-fedora        latest     ded7cd95e059      4 weeks ago        186.5 MB
-hello-world   latest     91c95931e552      10 weeks ago       910 B
+root@ubuntu-s-1vcpu-1gb-ams3-01:~# docker images
+REPOSITORY          TAG                 IMAGE ID            CREATED             SIZE
+fedora              latest              cc510acfcd70        6 weeks ago         253MB
+hello-world         latest              e38bc07ac18e        2 months ago        1.85kB
 ```
 
 This content is called an image and will serve as the base to create the operational container (here based on Fedora) in which we will process data:
 
-`#` **`docker run -ti ded7cd95e059 /bin/bash`**
+`#` **`docker run -ti cc510acfcd70 /bin/bash`**
 
 `[root@ad9b474525d0 /]#` **`cat /etc/fedora-release`**
 ```
-Fedora release 22 (Twenty Two)
+Fedora release 28 (Twenty Eight)
 ```
-`[root@ad9b474525d0 /]#` **`yum install -y wget`**
+`[root@ad9b474525d0 /]#` **`dnf install -y wget`**
 ```
-Yum command has been deprecated, redirecting to '/usr/bin/dnf install wget'.
-[...]
-Fedora 22 - x86_64                             3.7 MB/s |  41 MB     00:11
-Fedora 22 - x86_64 - Updates                   1.7 MB/s | 9.7 MB     00:05
-Last metadata expiration check performed 0:00:04 ago on Tue Jun 30 10:38:14 2015.
+Last metadata expiration check: 0:00:55 ago on Sun Jun 17 20:16:57 2018.
 Dependencies resolved.
-==========================================================================
- Package               Arch   Version        Repository               Size
-==========================================================================
+=========================================================================================================
+ Package              Arch                   Version                       Repository               Size
+=========================================================================================================
 Installing:
- libicu                x86_64 54.1-1.fc22    fedora                  8.4 M
- libpsl                x86_64 0.7.0-3.fc22   fedora                   50 k
- wget                  x86_64 1.16.3-1.fc22  fedora                  577 k
+ wget                 x86_64                 1.19.5-1.fc28                 updates                 719 k
 
 Transaction Summary
-==========================================================================
-Install  3 Packages
+=========================================================================================================
+Install  1 Package
 
-Total download size: 9.0 M
-Installed size: 31 M
+Total download size: 719 k
+Installed size: 2.8 M
 Downloading Packages:
-(1/3): libpsl-0.7.0-3.fc22.x86_64.rpm           16 kB/s |  50 kB     00:03
-(2/3): wget-1.16.3-1.fc22.x86_64.rpm           176 kB/s | 577 kB     00:03
-(3/3): libicu-54.1-1.fc22.x86_64.rpm           1.8 MB/s | 8.4 MB     00:04
---------------------------------------------------------------------------
-Total                                                                                                                     1.4 MB/s | 9.0 MB     00:06
+wget-1.19.5-1.fc28.x86_64.rpm                                            8.7 MB/s | 719 kB     00:00
+---------------------------------------------------------------------------------------------------------
+Total                                                                    700 kB/s | 719 kB     00:01
 Running transaction check
 Transaction check succeeded.
 Running transaction test
 Transaction test succeeded.
 Running transaction
-  Installing  : libicu-54.1-1.fc22.x86_64                              1/3
-warning: Unable to get systemd shutdown inhibition lock
-  Installing  : libpsl-0.7.0-3.fc22.x86_64                             2/3
-  Installing  : wget-1.16.3-1.fc22.x86_64                              3/3
-  Verifying   : wget-1.16.3-1.fc22.x86_64                              1/3
-  Verifying   : libpsl-0.7.0-3.fc22.x86_64                             2/3
-  Verifying   : libicu-54.1-1.fc22.x86_64                              3/3
+  Preparing        :                                                                                 1/1
+  Installing       : wget-1.19.5-1.fc28.x86_64                                                       1/1
+  Running scriptlet: wget-1.19.5-1.fc28.x86_64                                                       1/1
+install-info: No such file or directory for /usr/share/info/wget.info.gz
+  Verifying        : wget-1.19.5-1.fc28.x86_64                                                       1/1
 
 Installed:
-  libicu.x86_64 54.1-1.fc22 libpsl.x86_64 0.7.0-3.fc22 wget.x86_64 1.16.3-1.fc22
+  wget.x86_64 1.19.5-1.fc28
 
 Complete!
 
@@ -449,11 +554,13 @@ Linux ad9b474525d0 3.16.0-41-generic #57~14.04.1-Ubuntu SMP Thu Jun 18 18:01:13 
 ```
 If you're on a CentOS distribution it will rather be:
 ```
-Linux ad9b474525d0 3.10.0-327.el7.x86_64 #1 SMP Thu Oct 29 17:29:29 EDT 2015 x86_64 x86_64 x86_64 GNU/Linux
+Linux centos-s-1vcpu-1gb-ams3-01 3.10.0-862.2.3.el7.x86_64 #1 SMP Wed May 9 18:05:47 UTC 2018 x86_64 x86_64 x86_64 GNU/Linux
 ```
 
 
-So you checked that your container behaves like a Fedora 22 distribution. Only the kernel is shared between the Docker host and the Docker container. Open another console to view how this container has been created ans is seen:
+So you checked that your container behaves like a Fedora 28 distribution. Only the kernel is shared between the Docker host and the Docker container.
+
+Open another console to view how this container has been created and is seen:
 
 `#` **`docker ps`**
 ```
@@ -506,6 +613,9 @@ FROM centos:6
 RUN yum install -y httpd
 EOF
 ```
+
+Note : `cat Dockerfile` to see file content
+
 `#` **`docker build .`**
 ```
 Sending build context to Docker daemon  12.8 kB
@@ -672,6 +782,9 @@ MAINTAINER myself@mydomain.org
 CMD httpd
 EOF
 ```
+
+Note : `cat Dockerfile` to see file content
+
 `#` **`docker build .`**
 ```
 Sending build context to Docker daemon  12.8 kB
@@ -719,6 +832,8 @@ EXPOSE 80
 EOF
 ```
 
+Note : This is not mandatory, as this is only metadata for the image. However it will help people to know the exposed port of your image.
+
 `#` **`docker build .`**
 ```
 [...]
@@ -740,15 +855,15 @@ Modify again the Dockerfile to add owncloud to our image:
 `#` **`cat >> Dockerfile << EOF`**
 ```
 RUN yum install -y tar bzip2
-ADD http://labossi.hpintelco.net/owncloud-7.0.15.tar.bz2 /var/www/html/
-# Add this only if before docker engone 17.03
-# RUN cd /var/www/html/ && tar xvfj owncloud-7.0.15.tar.bz2 && rm -f owncloud-7.0.15.tar.bz2
+ADD https://download.owncloud.org/community/7.0/owncloud-7.0.15.tar.bz2 /var/www/html/
+RUN cd /var/www/html/ && tar xvfj owncloud-7.0.15.tar.bz2 && rm -f owncloud-7.0.15.tar.bz2
 EOF
 ```
 We can directly point to a URL, Docker will download the content and extract it in place.
-Try now to connect to your owncloud instance. The URL is http://10.3.222.X/owncloud if we host the lab or http://localhost/owncloud if you run it locally.
+Try now to connect to your owncloud instance. The URL is http://your_ip/owncloud from remote location or http://localhost/owncloud if you run it locally.
 
-![Owncloud failed](/Docker/img/owncloud_without_dep.png)
+<!-- ![Owncloud failed](/Docker/img/owncloud_without_dep.png) -->
+![Owncloud failed](img/owncloud_without_dep.png)
 
 1. What happens?
 2. What should you do next to solve the issue ? **Discuss with your trainer if you're stuck !**
@@ -757,7 +872,11 @@ Hint, you probably need to add the owncloud dependencies to be able to launch it
 
 **`RUN yum install -y php php-dom php-mbstring php-pdo php-gd`**
 
-With that you should be able to use owncloud ! (Note that you need to use that version with CentOS 6 for a PHP dependency management) But we're not done yet !!!
+With that you should be able to use owncloud ! (Note that you need to use that version with CentOS 6 for a PHP dependency management) 
+
+![Owncloud setup](/Docker/img/owncloud_setup.png)
+
+But we're not done yet !!!
 If you log on to your owncloud instance, and start customizing it (login/passwd for admin, storage path), you'll have errors first, that we'll fix later on and then if you `Docker stop` and `Docker rm` the container to relaunch it again, of course, none of this customization will be kept as it's not part of your container content.
 
 So we now have to deal with storage management for our Docker container. First we need to solve the error generated when you tried to configure your owncloud instance. We had rights issues. Use the following command to help solve the issue:
@@ -766,14 +885,15 @@ So we now have to deal with storage management for our Docker container. First w
 
 `#` **`docker exec b42f9f6f1034 ps auxww | grep httpd`**
 
-The principle is that the owner of the httpd process should have the rights on the owncloud directory to read and store files there. So modify you Dockerfile accordingly and retest.
+The principle is that the owner of the httpd process should have the rights on the owncloud directory to read and store files there. ** So modify you Dockerfile accordingly and retest **.
 
 Now you should be able to customize your owncloud instance and start using it.
+
 By now you have probably remarked that the ADD order is done each time, without any benefit from the cache management of Docker. Also you have to each time deal with IDs for containers and images, which is not that convenient. Let's fix that. Download the owncloud tar file in your directory and modify the ADD line:
 
-`#` **`wget http://labossi.hpintelco.net/owncloud-7.0.15.tar.bz2`**
+`#` **`wget https://download.owncloud.org/community/7.0/owncloud-7.0.15.tar.bz2`**
 
-`#` **`perl -pi -e 's|ADD http://labossi.hpintelco.net/owncloud-7.0.15.tar.bz2|COPY owncloud-7.0.15.tar.bz2|' Dockerfile`**
+`#` **`perl -pi -e 's|ADD https://download.owncloud.org/community/7.0/owncloud-7.0.15.tar.bz2|COPY owncloud-7.0.15.tar.bz2|' Dockerfile`**
 
 `#` **`docker build -t owncloud .`**
 
@@ -812,9 +932,12 @@ CONTAINER ID        IMAGE               COMMAND                CREATED          
 
 Now reload the owncloud configuration page in your browser, but this time configure the data folder as in the following screen shot:
 
-![Owncloud Setup](/Docker/img/owncloud.png)
+<!-- ![Owncloud Setup](/Docker/img/owncloud.png) -->
+![Owncloud Setup](img/owncloud.png)
 
-If you encounter issues you need to adapt your environment so that the apache user is allowed to write on to the /data directory. Your current Dockerfile should look like this at that point:
+** If you encounter issues you need to adapt your environment so that the apache user is allowed to write on to the /data directory. **
+
+Your current Dockerfile should look like this at that point:
 
 `#` **`cat Dockerfile`**
 ```
@@ -833,7 +956,7 @@ EXPOSE 80
 ```
 Move the example text file you created earlier to your ownClould Documents folder so you can see the file and view the file in ownCloud.
 
-`#` **`mv /data/myfile.txt /data/bruno/files/Documents`**
+`#` **`mv /data/myfile.txt /data/bruno/files/documents`**
 
 Open the Documents folder in the ownCloud Web UI. Confirm that the myfile.txt example file is present and then view the contents to check that they match what you created earlier.
 
@@ -859,6 +982,7 @@ cca4a1776ef12b256616e69a29753202efe0b1af5dd64fecfb638d2a797b234e
 2. Knowing that the owncloud configuration data are located under `/var/www/html/owncloud/config/config.php`  try to adapt the Dockerfile to solve that last issue. **Discuss with your trainer if you're stuck !**
 Note : there is more than one way to solve this.
 
+<!--
 # Using Docker compose
 
 Docker compose is a tool part of the Docker ecosystem.
@@ -1084,6 +1208,8 @@ On CentOS 7 just add the repo file mentioned earlier in this Lab to get it.
 ## Installing on Ubuntu
 ## Installing the engine manually
 -->
+
+<!--
 
 ## Installing the engine in the Cloud
 
@@ -1534,3 +1660,5 @@ Scale that micro-service to solve the problem.
 This is the end of this lab for now, we hope you enjoyed it.
 
 Github issues and pull requests to improve this lab are welcome.
+
+-->
