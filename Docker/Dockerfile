@@ -7,7 +7,7 @@ MAINTAINER myself@mydomain.org
 # if already downloaded you can use COPY instead
 COPY owncloud-7.0.15.tar.bz2 /var/www/html/
 RUN cd /var/www/html/ && tar xfj owncloud-7.0.15.tar.bz2 && rm -f owncloud-7.0.15.tar.bz2
-COPY config.php /var/www/html/owncloud/config/
+#COPY config.php /var/www/html/owncloud/config/
 RUN mkdir -p /data/owncloud
 RUN chown -R apache:apache /var/www/html/owncloud /data/owncloud
 RUN yum install -y php-mysql

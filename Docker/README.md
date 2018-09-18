@@ -19,6 +19,7 @@ Table of Contents
       * [Reference documents](#reference-documents)
       * [Note on Linux commands](#note-on-linux-commands)
    * [Environment setup](#environment-setup)
+      * [Proxy consideration](#proxy-consideration)
       * [Docker installation](#docker-installation)
          * [Ubuntu installation](#ubuntu-installation)
          * [CentOS installation](#centos-installation)
@@ -27,37 +28,20 @@ Table of Contents
       * [The first container](#the-first-container)
       * [The second container](#the-second-container)
    * [Configuring owncloud in a container](#configuring-owncloud-in-a-container)
-
-<!--    * [Docker Lab Contents](#docker-lab-contents)--> 
-<!--       * [Lab Writers](#lab-writers-and-trainers)--> 
-<!--       * [Lab Trainers](#lab-writers-and-trainers)--> 
-<!--       * [Objectives of the Docker Lab](#objectives-of-the-docker-lab)--> 
-<!--       * [Reference documents](#reference-documents)--> 
-<!--       * [Note on Linux commands](#note-on-linux-commands)--> 
-<!--    * [Environment setup](#environment-setup)--> 
-<!--       * [Proxy consideration](#proxy-consideration)--> 
-<!--       * [Docker installation](#docker-installation)--> 
-<!--          * [Ubuntu installation](#ubuntu-installation)--> 
-<!--          * [CentOS installation](#centos-installation)--> 
-<!--          * [Check installation](#check-installation)--> 
-<!--    * [Using Docker](#using-docker)--> 
-<!--       * [The first container](#the-first-container)--> 
-<!--       * [The second container](#the-second-container)--> 
-<!--    * [Configuring owncloud in a container](#configuring-owncloud-in-a-container)--> 
-<!--    * [Using Docker compose](#using-docker-compose)--> 
-<!--       * [Installing Docker compose](#installing-docker-compose)--> 
-<!--       * [Our first docker-compose.yml file](#our-first-docker-composeyml-file)--> 
-<!--       * [Going further with docker-compose.yml](#going-further-with-docker-composeyml)--> 
-<!--    * [Using docker-machine to create Docker hosts](#using-docker-machine-to-create-docker-hosts)--> 
-<!--    * [Using Docker Swarm](#using-docker-swarm)--> 
-<!--       * [Installing Docker Swarm](#installing-docker-swarm)--> 
-<!--       * [Installing on CentOS 7](#installing-on-centos-7)--> 
-<!--       * [Installing the engine in the Cloud](#installing-the-engine-in-the-cloud)--> 
-<!--       * [Using Docker Swarm to make our configuration available and scalable](#using-docswarm-to-make-our-configuration-available-and-scalable)--> 
-<!--          * [CentOS 7](#centos-7)--> 
-<!--          * [Ubuntu](#ubuntu)--> 
-<!--    * [Deploy a cloud native application.](#deploy-a-cloud-native-application)--> 
-<!--       * [Objectives](#objectives)--> 
+   * [Using Docker compose](#using-docker-compose)
+      * [Installing Docker compose](#installing-docker-compose)
+      * [Our first docker-compose.yml file](#our-first-docker-composeyml-file)
+      * [Going further with docker-compose.yml](#going-further-with-docker-composeyml)
+   * [Using docker-machine to create Docker hosts](#using-docker-machine-to-create-docker-hosts)
+   * [Using Docker Swarm](#using-docker-swarm)
+      * [Installing Docker Swarm](#installing-docker-swarm)
+      * [Installing on CentOS 7](#installing-on-centos-7)
+      * [Installing the engine in the Cloud](#installing-the-engine-in-the-cloud)
+      * [Using Docker Swarm to make our configuration available and scalable](#using-docswarm-to-make-our-configuration-available-and-scalable)
+         * [CentOS 7](#centos-7)
+         * [Ubuntu](#ubuntu)
+   * [Deploy a cloud native application.](#deploy-a-cloud-native-application)
+      * [Objectives](#objectives)
 
 ## Objectives of the Docker Lab
 At the end of the Lab students should be able to install Docker, use the CLI to create a new image, a container, launch an application in it, store data, configure the network.
@@ -982,7 +966,7 @@ cca4a1776ef12b256616e69a29753202efe0b1af5dd64fecfb638d2a797b234e
 2. Knowing that the owncloud configuration data are located under `/var/www/html/owncloud/config/config.php`  try to adapt the Dockerfile to solve that last issue. **Discuss with your trainer if you're stuck !**
 Note : there is more than one way to solve this.
 
-<!--
+
 # Using Docker compose
 
 Docker compose is a tool part of the Docker ecosystem.
@@ -991,6 +975,7 @@ This is mainly due to the Docker philosophy to use one container per service.
 
 Another benefit is to define the container running parameters within a YAML configuration file.
 
+<!--
 ## Installing Docker compose
 
 Use the following commands:
@@ -1009,25 +994,48 @@ Check that the binary works by displaying the revision (providing you have
 ```
 docker-compose version 1.9.0, build 2585387`**
 ```
+-->
+
+## Quickly setup a new clean environment
+
+1. Deploy a Docker Ubuntu 18.04 droplet using the lab interface.
+2. Create a new folder called owncloud and jump to it.
+```
+mkdir owncloud && cd owncloud
+```
+3. Get the Dockerfile from the project and owncloud sources. You can use on your droplet.
+```
+wget https://raw.githubusercontent.com/uggla/Labs/master/Docker/Dockerfile`
+wget https://download.owncloud.org/community/7.0/owncloud-7.0.15.tar.bz2
+```
+4. Build the image
+```
+docker build -t owncloud .
+```
+5. Run a container with this image
+```
+docker run -d -p 80:80 --name owncloud owncloud
+```
+6. Allow port 80 on the firewall
+```
+ufw allow 80
+```
+7. Connect with a browser the owncloud instance (http://<droplet_ip>/owncloud), you should see the owncloud setup page.
+
+8. Destroy the created container to release port 80 and continue on with the lab.
+
+**Call your trainer if you're stuck !**
 
 ## Our first docker-compose.yml file
-Now we have a working docker-compose, we need to create an application environment and our first **docker-compose.yml** configuration file.
+Now we have a working Dockerfile, we need to create an application environment and our first **docker-compose.yml** configuration file.
 
-Create the build environment by moving all our previous stuffs into a folder:
+In order to create our configuration file. We will use the new v3.0 format instead of the legacy one. The v3.0 was created to extend functionalities and can be activated by specifying the release at the top of the file.
 
-`#` **`mkdir owncloud`**
-
-`#` **`mv Dockerfile owncloud-7.0.15.tar.bz2 config.php owncloud`**
-
-`#` **`cd owncloud`**
-
-Now we can create our configuration file. We will use the new v2.0 format instead of the legacy one. The v2.0 was created to extend functionalities and can be activated by specifying the release at the top of the file.
-
-Note : Of course old docker-compose binaries don't manage v2.0.
+Note : Of course old docker-compose binaries don't manage v3.0, you can support information [here](https://docs.docker.com/compose/compose-file/#compose-and-docker-compatibility-matrix)
 
 `#` **`cat > docker-compose.yml << EOF`**
 ```
-version: '2'
+version: '3'
 services:
   web:
     build: .
@@ -1038,7 +1046,7 @@ services:
 EOF
 ```
 
-The above file asks to docker-compose to define a web service that will be built from our Dockerfile, to expose port 80 and to map /data on the host to /data in the container.
+The above file asks docker-compose to define a web service that will be built from our Dockerfile, then expose port 80 and map /data on the host to /data in the container.
 
 We can now start our application using:
 
@@ -1054,7 +1062,7 @@ CONTAINER ID        IMAGE               COMMAND                  CREATED        
 2573be6f1401        owncloud_web        "/bin/sh -c '/usr/sbi"   35 seconds ago      Up 34 seconds       0.0.0.0:80->80/tcp   owncloud_web_1
 ```
 
-Our application starts and should work the same way as previously. However it is much simpler because we don't need to define ports and storage mapping, also the YAML file can be held in  and this information can be managed in Configuration Management System.
+Our application starts and should work the same way as previously. However it is much simpler because we don't need to define ports and storage mapping from the command line, also the YAML file can be held in and this information can be managed in Configuration Management System.
 
 You can also note that the container name is defined as `application_service_number` (owncloud_web_1)
 
@@ -1069,7 +1077,7 @@ Removing network owncloud_default
 
 Check what happens to the container.
 
-Ok that's cool, but it is not really a big change.
+Ok that's cool, but it is not really a big change so far.
 
 ## Going further with docker-compose.yml
 
@@ -1079,11 +1087,9 @@ As mentioned during the setup (below), this is convenient for a limited installa
 
 ![Owncloud sqlite setup](/Docker/img/owncloud_setup.png)
 
-In order to install owncloud on another database:
+In order to install owncloud on a mysql/mariadb database:
 
-   1. Wipe `config.php` to have the setup page proposed again by the application.
-   2. Add the `php-mysql` package to your Dockerfile in the relevant part.
-   3. Start the application but use `docker-compose up -d --build` to force the rebuild of the Dockerfile.
+   1. `php-mysql` package has been added to the Dockerfile.
 
 ![Owncloud sqlite setup](/Docker/img/owncloud_setup_db.png)
 
@@ -1093,7 +1099,7 @@ Of course it requires some information about the compose-file format. Documentat
 
   1. Try to modify `docker-compose.yml` to add a db service based on the mariadb official images.
   2. We need to provide the database parameters fields (user, password etc...). Hint: Look at the mariadb container environment variables. **Discuss with your trainer if you're stuck !**
-  3. What is the hostname of our container ? Hint: Look at the link directive.
+  3. What is the hostname of our container ? Hint: Look at the links or preferred network directive to allow db container connection from the web container.
 
 If you didn't manage to configure the mariadb container and use it with owncloud, then the additional content for your docker-compose.yml could be useful:
 ```
@@ -1112,9 +1118,9 @@ We are now using a mariadb container, but the database content is inside the con
   1. Use a Docker volume to use them from the host.
   2. Modify docker-compose.yml to do that. Hint: separate owncloud and db data under /data to avoid user rights conflicts.
 
-If you manage to configure the mariadb container with persistant data your docker-compose.yml should look like this:
+If you manage to configure the mariadb container with persistent data your docker-compose.yml should look like this:
 ```
-version: '2'
+version: '3'
 services:
   web:
     build: .
@@ -1122,8 +1128,10 @@ services:
       - /data/owncloud:/data/owncloud
     ports:
       - "80:80"
-    links:
-      - db:mariadb
+    networks:
+      - oclan
+    depends_on:
+      - db
   db:
     image: mariadb
     environment:
@@ -1131,8 +1139,13 @@ services:
       - MYSQL_DATABASE=owncloud
       - MYSQL_USER=owncloud
       - MYSQL_PASSWORD=owncloudpwd
+    networks:
+      - oclan
     volumes:
       - /data/db:/var/lib/mysql
+networks:
+  oclan:
+    driver: bridge
 ```
 
 `#` **`docker-compose ps`**
@@ -1143,6 +1156,11 @@ owncloud_db_1    docker-entrypoint.sh mysqld      Up      3306/tcp
 owncloud_web_1   /bin/sh -c /usr/sbin/apach ...   Up      0.0.0.0:80->80/tcp
 ```
 
+Try to change the listening port inside your docker-compose.yml file and perform a `docker-compose -up -d`
+
+You can notice that only the services that need to be modified are recreated.
+
+
 You would like to try to allow scalability for your application by scaling the
 web service
 
@@ -1151,7 +1169,9 @@ web service
 Detect whether this is working or not and why. If not, we'll find another way
 to solve this.
 
+Bonus, you can try to update the docker-compose.yml file to add an ha-proxy instance in front of the web services.
 
+<!--
 # Using docker-machine to create Docker hosts
 
 Depending on the context of the Lab, you may already have enough machines available (5) to run the Swarm part, or you may need to create them. In that case, continue with this part, if not, skip to the next one.
@@ -1186,35 +1206,35 @@ The above command will provide the env variable and the command to export them i
 `#` **`eval $(docker-machine env dockerm1)`**
 
 you can now work with Docker as usual, however all commands passed will operate on the remote host.
-
+-->
 
 # Using Docker Swarm
 
 Docker Swarm is, since version 1.12, part of Docker Engine.
 It is used to provide high availability for Docker containers.
 
+## Extend our environment with more nodes
+
+We will deploy a 5 nodes (3 X master + 2 X workers) cluster.
+
+Note : If you are late on this lab, you can just use 1 X master and 2 workers, but do not stop the master in further steps.
+
+Note : In order to simplify the management of the cluster you could use an ssh-agent and `pdsh` to run commands on all the nodes at the same time. Configuring these tools is outside of this lab but if you are really interested to do it call your nice trainer that will give you the direction to do it.
+
+
+1. Deploy 4 X new Docker Ubuntu 18.04 droplets using the lab interface.
+
+<!-- 2. Install pdssh
+PDSH_SSH_ARGS_APPEND="-o StrictHostKeyChecking=no" pdsh -R ssh -w ^hosts whoami
+-->
+2. Disable the firewall on all of them
+```
+ufw disable
+```
+<!--
 A really complete and excellent workshop is available for Swarm at https://jpetazzo.github.io/orchestration-workshop
 We extracted lots of ideas from it to lead you towards a first understanding of Swarm.
-
-## Installing Docker Swarm
-
-If you have a version prior to 1.13, then you'll need to install Docker Engine 1.13+ as the rest of this lab requires that version.
-
-## Installing on CentOS 7
-
-On CentOS 7 just add the repo file mentioned earlier in this Lab to get it.
-
-<!--
-## Installing on Ubuntu
-## Installing the engine manually
 -->
-
-<!--
-
-## Installing the engine in the Cloud
-
-If you followed docker-machine part, you can now use these machines to configure a Swarm cluster as you have the latest version available in them.
-
 ## Using Docker Swarm to make our configuration available and scalable
 
 So now that we can orchestrate the creation of our 2 containers hosting our
@@ -1255,6 +1275,7 @@ d8dfb2e8qd3h703pw43o5r88f    c10.labossi.hpintelco.org  Ready   Active
 
 Check what you can see on each node. Also look at the output of the `docker info` command.
 
+<!--
 If you have problems with error messages like "Error response from daemon: Timeout was reached before node was joined." then you firewall may be blocking the ports that Docker Swarm uses. If you think this is the case, you may have firewalling issues ;-)
 
 ### Configuring firewall on CentOS7
@@ -1288,7 +1309,7 @@ I recommend that you run the following command on **all** nodes to avoid firewal
 `#` **`ufw disable`**
 
 Back to out normal program now !
-
+-->
 Swarm has the notion of worker (hosting containers), manager (able to be also
 a worker and being a backup leader) and Leader (manager being in charge of the
 Swarm cluster).
@@ -1298,7 +1319,9 @@ of managers. Here we can promote 2 of our workers as managers. For that, we
 need to get another token, the manager one, instead of the worker one we used
 previously.
 
-`#` **`docker swarm join-token -q manager`**
+Note : If you deployed only 3 nodes, you can not add managers, so skip this part.
+
+`#` **`docker swarm join-token manager`**
 ```
 SWMTKN-1-444fdgnkvchgol08ck8rexwhxg8hbvwncyqs61mvcu0b3978qs-cw10maud95375a2t35p7m5kox
 ```
@@ -1329,20 +1352,23 @@ let's create a simple service to test our cluster:
 
 `#` **`docker service create alpine ping 8.8.8.8`**
 ```
-ag12vg6ts417gj4r2y2w57j5q
+v12wk2jruwhltftgv5xalaped
+overall progress: 1 out of 1 tasks 
+1/1: running   [==================================================>] 
+verify: Service converged 
 ```
 
 `#` **`docker service ls`**
 ```
-ID            NAME         REPLICAS  IMAGE   COMMAND
-ag12vg6ts417  tiny_curran  1/1       alpine  ping 8.8.8.8
+ID                  NAME                MODE                REPLICAS            IMAGE               PORTS
+v12wk2jruwhl        relaxed_morse       replicated          1/1                 alpine:latest       
 
 ```
 
-`#` **`docker service ps ag1`**
+`#` **`docker service ps v12`**
 ```
-ID                         NAME                   IMAGE   NODE     DESIRED STATE  CURRENT STATE              ERROR
-9aq9iq25ayhp1nk11ems7tsly  tiny_curran.1  alpine  c6.labossi.hpintelco.org  Running        Running 35 seconds ago
+ID                  NAME                IMAGE               NODE                         DESIRED STATE       CURRENT STATE                ERROR               PORTS
+qu030vhwrii4        relaxed_morse.1     alpine:latest       unrecognized-komodo-dragon   Running             Running about a minute ago     
 ```
 
 Use the Docker commands to check how the container is behaving in your
@@ -1351,39 +1377,51 @@ cluster behaviour.
 
 You can scale that service:
 
-`#` **`docker service update ag1 --replicas 10`**
+`#` **`docker service update v12 --replicas 10`**
 ```
-ag1
+v12
+overall progress: 10 out of 10 tasks 
+1/10: running   [==================================================>] 
+2/10: running   [==================================================>] 
+3/10: running   [==================================================>] 
+4/10: running   [==================================================>] 
+5/10: running   [==================================================>] 
+6/10: running   [==================================================>] 
+7/10: running   [==================================================>] 
+8/10: running   [==================================================>] 
+9/10: running   [==================================================>] 
+10/10: running   [==================================================>] 
+verify: Service converged 
 ```
 
 Check what happens. You can use docker ps on the current node, and on another node.
 
 In order to help visualize the state of the Swarm cluster you can use the visualizer companion of Swarm. On the master node run the following:
 
-`#` **`docker run -it -d -p 8080:8080 -v /var/run/docker.sock:/var/run/docker.sock manomarks/visualizer`**
+`#` **`docker service create --name=viz --publish=8080:8080/tcp --constraint=node.role==manager --mount=type=bind,src=/var/run/docker.sock,dst=/var/run/docker.sock dockersamples/visualizer`**
 
 And then connect your browser to it on port 8080. You should see something similar to the below image:
 ![Swarm Visualizer](/Docker/img/visualizer.png)
 
-Now let's put on our cluster our application. With recent versions of docker-compose, there is the new notion of stack to orchestrate services. Adapt your docker-compose to use it following the below model:
+Here you can experiment on meshing, connecting to any node, should send you to the required application.
+
+
+Now let's deploy on our cluster, our application. With recent versions of docker, there is the new notion of stack to orchestrate services. Adapt your docker-compose to use it following the below model:
 ```
 version: '3'
 services:
   web:
-    build: .
+    image: owncloud_web   <-- use previously generated image
     volumes:
       - /data/owncloud:/data/owncloud
-      - /data/config:/var/www/html/owncloud/config
     ports:
-      - "8000:80"
-    links:
-      - db:mariadb
+      - "80:80"
     networks:
-      oclan:
+      - oclan
+    depends_on:
+      - db
   db:
     image: mariadb
-    ports:
-      - "3306:3306"
     environment:
       - MYSQL_ROOT_PASSWORD=password
       - MYSQL_DATABASE=owncloud
@@ -1392,39 +1430,46 @@ services:
     volumes:
       - /data/db:/var/lib/mysql
     networks:
-      oclan:
-        aliases:
-          - db
+      - oclan
 networks:
-    oclan:
-        driver: overlay
+  oclan:
+    driver: overlay      <-- use overlay network
 ```
 
-Compared to the v2 file, the main change is that you're now defining in it your network to allow communication between containers
+Note : the overlay network. This is a network that will use VXLAN technology to create an overlay network between hosts. So it creates an internal network on systems that could be not in the same subnets.
+
+Note 2 : behind the scene the init phase of swarm did a lot of complex things, VXLAN, security (everything is on top of TLS), meshing, load balancing. Also note that load balancing on physical nodes must be achieved by an external mechanism. Really nice to my mind.
 
 Now start your stack:
 
-`#` **`docker stack deploy -c docker-compose-v3.yml oc`**
+`#` **`docker stack deploy -c docker-compose.yml oc`**
 ```
-Ignoring unsupported options: build, links
-
 Creating service oc_web
-Creating service oc_db
+Updating service oc_db (id: dm2j7n185u53jxwkcrvsgrxu9)
+```
+
+`#` **`docker service ls`**
+```
+ID                  NAME                MODE                REPLICAS            IMAGE                 PORTS
+dm2j7n185u53        oc_db               replicated          1/1                 mariadb:latest        
+g26e0mhakd6x        oc_web              replicated          1/1                 owncloud_web:latest   *:80->80/tcp
+v12wk2jruwhl        relaxed_morse       replicated          10/10               alpine:latest         
+
 ```
 You may have some problems with this. Try to understand what happens and solve your issues. How many replicas are working ? Where are the images to use ? Which node can use them ?
 Hint: use the command `docker stack services oc` to help diagnose. And as usual talk to your instructor !
 
 So you will need to use a private registry here to help solving that issue.
 
-We have deployed a Docker registry for you, available from a URL that will be provided by the instructor.
-(If you use the internal HPE Lab, then try lab7-2.labossi.hpintelco.org:5500 - If you want to create your own, use our scripts at https://github.com/bcornec/Labs/tree/master/Docker/registry)
+We have deployed a Docker registry for you, available from an URL that will be provided by the instructor.
+(If you want to create your own to replay this lab, use our scripts at https://github.com/uggla/Labs/tree/master/Docker/registry)
 
 You need to add the CA public certificate made on the registry to trust it.
 Download the CA from the registry web site:
 
 ### CentOS 7
 
-`#` **`curl -L http://lab7-2.labossi.hpintelco.org/ca.crt > /etc/pki/ca-trust/source/anchors/ca-registry.crt`**
+`#` **`curl -L http://${REGISTRY_FQDN}:81/ca.crt > /etc/pki/ca-trust/source/anchors/ca-registry.crt`**
 
 `#` **`update-ca-trust`**
 
@@ -1432,14 +1477,14 @@ Download the CA from the registry web site:
 
 ### Ubuntu/Debian
 
-`#` **`curl -L http://lab7-2.labossi.hpintelco.org/ca.crt > /usr/local/share/ca-certificates/ca-registry.crt`**
+`#` **`curl -L http://${REGISTRY_FQDN}:81/ca.crt > /usr/local/share/ca-certificates/ca-registry.crt`**
 
 `#` **`update-ca-certificates`**
 
 `#` **`service docker restart`**
 
 Check that the registry runs as expected:
-`#` **`curl -L https://<my-registry-fqdn>:5500/v2`**
+`#` **`curl -L https://${REGISTRY_FQDN}/v2`**
 `{}`
 
 Of course, each node needs to be configured identically.
@@ -1447,11 +1492,11 @@ Of course, each node needs to be configured identically.
 In order to share the image between the nodes, you need to push it to this new
 registry, by using the appropriate tag. For example, you may use a command similar to
 
-`#` **`docker tag owncloud_web:latest ${DOMAIN_NAME}:5500/owncloud_web`**
+`#` **`docker tag owncloud_web:latest ${REGISTRY_FQDN}/owncloud_web`**
 
 And then you can push that image into our registry so it's available to other engines to use.
 
-`#` **`docker push ${DOMAIN_NAME}:5500/owncloud_web`**
+`#` **`docker push ${REGISTRY_FQDN}/owncloud_web`**
 
 Do the same with the mariadb service that you create afterwards following the same approach.
 Look at your stack status. Is everything working fine or not ? What happens if you kill the httpd process ? the mysql process ? Explain what is happening.
@@ -1463,21 +1508,31 @@ Let's configure NFS on the first machine (10.11.51.136 in my case):
 
 or
 
-`#` **`apt-get install -y nfs-server`** # Ubuntu
+`#` **`apt-get install -y nfs-kernel-server`** # Ubuntu 18.04
 
 Edit the exports file so it looks like:
 
 `#` **`cat /etc/exports`**
 ```
-/data/db        *.labossi.hpintelco.org(rw,no_root_squash,async,insecure,no_subtree_check)
-/data/owncloud  *.labossi.hpintelco.org(rw,no_root_squash,async,insecure,no_subtree_check)
-/data/config    *.labossi.hpintelco.org(rw,no_root_squash,async,insecure,no_subtree_check)
+/data/db        *(rw,no_root_squash,async,insecure,no_subtree_check)   <-- do not do that (world export) in production
+/data/owncloud  *(rw,no_root_squash,async,insecure,no_subtree_check)
+/data/config    *(rw,no_root_squash,async,insecure,no_subtree_check)
 ```
 `#` **`exportfs -a`**
 
-`#` **`systemctl start nfs`**
+`#` **`systemctl start nfs-kernel-server`**
 
-Check on another node that your NFS setup is correct.
+Install on other nodes nfs client and check that your NFS setup is correct.
+
+`#` **`yum install -y nfs-utils`**
+
+`#` **`systemctl start rpc-statd`** # CentOS7
+
+or
+
+`#` **`apt-get install -y nfs-common`**
+
+`#` **`service rpc.statd start`** # Ubuntu
 
 Now you can create a Docker volume that will be used by the containers launched with a service, by amending your docker-compose file which should now look like this:
 
@@ -1486,20 +1541,18 @@ version: '3'
 services:
   web:
     build: .
-    image: lab7-2.labossi.hpintelco.org:5500/owncloud_web
+    image: registry.uggla.fr/owncloud_web
     volumes:
       - /data/owncloud:/data/owncloud
       - /data/config:/var/www/html/owncloud/config
     ports:
-      - "8000:80"
-    links:
-      - db:mariadb
+      - "80:80"
     networks:
-      oclan:
+      - oclan
   db:
     image: mariadb
     ports:
-      - "3306:3306"
+      - "3306:3306"                            <-- note that this port is exposed for the following part
     environment:
       - MYSQL_ROOT_PASSWORD=password
       - MYSQL_DATABASE=owncloud
@@ -1508,9 +1561,7 @@ services:
     volumes:
       - dbvol:/var/lib/mysql
     networks:
-      oclan:
-        aliases:
-          - db
+      - oclan
 networks:
     oclan:
         driver: overlay
@@ -1520,14 +1571,14 @@ volumes:
     driver: local
     driver_opts:
       type: nfs
-      o: addr=10.11.51.136,rw
+      o: addr=188.166.10.159,rw,nfsvers=4.1    <-- this is required to have locks as nfs V3 does not support lock required by mariadb
       device: ":/data/db"
 ```
 
 Restart your stack:
 `#` **`docker stack rm oc`**
 
-`#` **`docker stack deploy -c docker-compose-v3.yml oc`**
+`#` **`docker stack deploy -c docker-compose.yml oc`**
 
 Check they have now been created with:
 `#` **`docker volume ls`**
@@ -1540,20 +1591,11 @@ Is that now working as expected ? If you use Docker 17.03+ you should have the d
 Can you have access to the database with the mysql command from your host (install the command if you need it) ? Check that the volume is mounted correctly in the container. Check that you can reach the mysql daemon from any host in the cluster. For mysql to work correctly using an NFS exported directory for its files, you will need to have the rpc.statd daemon running on all nodes of your cluster.
 Hint:
 
-`#` **`yum install -y nfs-utils`**
 
-`#` **`systemctl start rpc-statd`** # CentOS7
-
-or
-
-`#` **`apt-get install -y nfs-common`**
-
-`#` **`service rpc.statd start`** # Ubuntu
-
-Create a temporary table in the owncloud database to check and then relaunch the service to verify the persistency of the DB.
+Create a temporary table in the owncloud database to check and then relaunch the service to verify the persistence of the DB.
 MariaDB hint:
 
-`#` **`mysql -uowncloud -powncloudpwd`**
+`#` **`mysql -h <one node> -uowncloud -powncloudpwd`**
 
 `MariaDB [(none)]>` **`use owncloud;`**
 
@@ -1564,8 +1606,6 @@ MariaDB hint:
 `MariaDB [(owncloud)]>` **`quit;`**
 
 Once all this is solved, you can try dealing with the web frontend. Adopt a similar approach (NFS volume and service). Check that the communication between owncloud and the DB works fine.
-
-You may be affected as myself by remaining bugs such as https://github.com/docker/docker/issues/20486 or https://github.com/docker/docker/issues/25981, especially mixing tests with docker-compose and swarm. For me, the only way to turn around them was to reboot the full cluster completely.
 
 Observe what happens when you restart a Docker service on a node hosting one of the 2 services.
 
@@ -1584,7 +1624,7 @@ Let's explain first the application and its goal.
 ## Objectives
 
 In this section, we will create a promotional lottery for an e-commerce site.
-All the software components are provided, you'll "just" have to perform a partial containerzation of the service.
+All the software components are provided, you'll "just" have to perform a partial containerization of the service.
 
 As the setup takes some time, we'll start with the instructions and then you'll have time to read the explanations.
 
@@ -1592,12 +1632,12 @@ First have access to the application we developed for this.
 
 `#` **`yum install -y git`**
 
-`#` **`git clone https://github.com/bcornec/openstack_lab.git`**
+`#` **`git clone https://github.com/uggla/cloud_native_app.git`**
 
 `#` **`cd cloud_native_app`**
 
-As you can see in the openstack_lab directory created, the same application can be used for a Docker or an OpenStack usage (or combining them).
-The application is still a WIP, so don't worry with all the additional files and directories for now. Upstream is at https://github.com/uggla/openstack_lab.git alongside its documentation.
+As you can see in the cloud_native_app directory created, the same application can be used for a Docker or an OpenStack usage (or combining them).
+The application is still a WIP/Demo, so don't worry with all the additional files and directories for now.
 
 We need first to run the application locally using the compose file, in order to create all the Docker images and to upload them into the registry.
 
@@ -1661,4 +1701,3 @@ This is the end of this lab for now, we hope you enjoyed it.
 
 Github issues and pull requests to improve this lab are welcome.
 
--->
