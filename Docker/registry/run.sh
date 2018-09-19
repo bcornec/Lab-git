@@ -1,7 +1,7 @@
 #!/bin/bash
 # Modify openssl.cnf to activate extensions (SAN)
 sed -i -e 's/# req_extensions = v3_req/req_extensions = v3_req/' /etc/pki/tls/openssl.cnf
-sed -i -e '/keyUsage = nonRepudiation, digitalSignature, keyEncipherment/ a subjectAltName = @alt_names' /etc/pki/tls/openssl.cnf
+sed -i -e '/^keyUsage = nonRepudiation, digitalSignature, keyEncipherment/ a subjectAltName = @alt_names' /etc/pki/tls/openssl.cnf
 cat << EOF >>/etc/pki/tls/openssl.cnf
 [alt_names]
 DNS.1 = $PUBFQDN
@@ -9,11 +9,11 @@ EOF
 
 # Generate CA key + cert
 umask 277 && openssl genrsa 2048 > ca/ca.key
-umask 007 && openssl req -new -x509 -days 365 -subj "/C=FR/ST=/L=Grenoble/O=HPE/CN=ca" -key ca/ca.key > ca/ca.crt
+umask 007 && openssl req -new -x509 -days 365 -subj "/C=FR/ST=Isere/L=Grenoble/O=CGI/CN=ca" -key ca/ca.key > ca/ca.crt
 # Generate server (registry) key + csr
 umask 002 && openssl genrsa 2048 > srv/repo.key
 umask 002 && openssl req -new \
-   	-subj "/C=FR/ST=/L=Grenoble/O=HPE/CN=$PUBFQDN" \
+   	-subj "/C=FR/ST=Isere/L=Grenoble/O=CGI/CN=$PUBFQDN" \
    	-key srv/repo.key \
 	> srv/repo.csr
 # Sign the csr with the CA
