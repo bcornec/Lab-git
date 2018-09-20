@@ -1680,7 +1680,9 @@ cn81a9a5j8yi  w1           1/1       lab7-2.labossi.hpintelco.org:5500/cloudnati
 e6c6ypgcxdy2  p            1/1       lab7-2.labossi.hpintelco.org:5500/cloudnativeapp_p
 ```
 
-In order to use the application you'll now have to connect to your system hosting th web application (in our case http://c6.labossi.hpintelco.org/)
+In order to use the application you'll now have to connect to your system hosting the web application (in our case http://c6.labossi.hpintelco.org/)
+
+![cna](img/cna.png)
 
 You should see a message in your browser saying:
 ```
