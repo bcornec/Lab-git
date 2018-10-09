@@ -68,7 +68,7 @@ This command will create the text file `fileToCreate` and populate it with the l
 
 You can display the content of the created file with the command `cat fileToCreate`.
 
-In order to append text to the file, the first `>` can be replaced with `>>`.  
+In order to append text to the file, the first `>` can be replaced with `>>`.
 
 If you prefer, you can edit the files using **vim** or **nano** text editors.
 
@@ -83,7 +83,7 @@ Estimated time: 15 minutes
 
 Please refer to the instructions available at https://github.com/bcornec/Labs/blob/master/ENVIRONMENT.md
 
-Note that Docker is also providing the possibility to have a web based access to an on demand infrastructure for 4 hours. This is available at http://play-with-docker.com. Check that as a fallback you can use it and create up to 5 nodes with it. Beomce familiar to use this or your platform of choice for the rest of the Lab.
+Note that Docker is also providing the possibility to have a web based access to an on demand infrastructure for 4 hours. This is available at http://play-with-docker.com. Check that as a fallback you can use it and create up to 5 nodes with it. Become familiar to use this or your platform of choice for the rest of the Lab.
 
 ## Proxy consideration
 
@@ -102,17 +102,26 @@ export https_proxy=http://<proxy name or ip>:<proxy port>
 ```
 
  4. Configure Docker daemon to use the proxy as explained by this document: https://docs.docker.com/engine/admin/systemd/#http-proxy (in short add Environment="HTTP_PROXY=http://proxy.example.com:80/" "HTTPS_PROXY=http://proxy.example.com:80/" to your [services] section)
+<!-- Previous version
  5. **Set the proxy in each of your Dockerfiles** by adding following text as the 2nd and 3rd line of the Dockerfile.
 
 ```
 ENV http_proxy <HTTP_PROXY>
 ENV https_proxy <HTTP_PROXY>
 ```
+-->
+ 5. Build Dockerfile with the appropriate arguments.
 
+```
+docker build --build-arg http_proxy=http://<proxy name or ip>:<proxy port> https_proxy=http://<proxy name or ip>:<proxy port> .
+```
+
+Documentation details :
+https://docs.docker.com/engine/reference/builder/#arg
 
 ## Docker installation
 Docker is available externally from http://docs.docker.com/linux/step_one/ or using your distribution packages, or from github at https://github.com/docker/docker
-Version 17.03 is the current stable release. This lab requires at least version 1.7.
+Version 18.06 is the current stable release. This lab requires at least version 1.7.
 
 Ask to your instructor which Linux distribution will be used for the Lab (Ubuntu or CentOS). Then refer to the corresponding instructions below.
 
@@ -121,7 +130,7 @@ Other distributions should be as easy to deal with once the same packages have b
 ### Ubuntu installation
 If you work on an Ubuntu environment for the Lab, you may want to use apt to do the installation of Docker with all its dependencies. As Ubuntu provides an old version of Docker, we will use a PPA providing a more up to date version:
 
-#### 17.04
+#### 16.04 and later
 
 `#` **`sudo apt-get update`**
 
@@ -129,13 +138,11 @@ If you work on an Ubuntu environment for the Lab, you may want to use apt to do 
 
 `#` **`curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -`**
 
-`#` **`sudo add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu zesty stable"`**
-
-Note: (instead of 17.04 use  $(lsb_release -cs) for another version
+`#` **`sudo add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable"`**
 
 `#` **`sudo apt-get update`**
 
-`#` **` sudo apt-get install docker-ce`**
+`#` **`sudo apt-get install docker-ce`**
 
 #### 14.04
 
@@ -207,39 +214,48 @@ EOF
 ```
 
 `#` **`yum install docker-engine`**
-```none
-Loaded plugins: product-id, search-disabled-repos, subscription-manager
-This system is not registered to Red Hat Subscription Management. You can use subscription-manager to register.
+```
+Loaded plugins: fastestmirror
+Determining fastest mirrors
+ * base: mirror.denit.net
+ * extras: centos.mirror.triple-it.nl
+ * updates: mirrors.supportex.net
+base                                                                              | 3.6 kB  00:00:00
+dockerrepo                                                                        | 2.9 kB  00:00:00
+extras                                                                            | 3.4 kB  00:00:00
+updates                                                                           | 3.4 kB  00:00:00
+(1/5): base/7/x86_64/group_gz                                                     | 166 kB  00:00:00
+(2/5): extras/7/x86_64/primary_db                                                 | 149 kB  00:00:00
+(3/5): dockerrepo/primary_db                                                      |  34 kB  00:00:00
+(4/5): updates/7/x86_64/primary_db                                                | 2.7 MB  00:00:00
+(5/5): base/7/x86_64/primary_db                                                   | 5.9 MB  00:00:00
 Resolving Dependencies
 --> Running transaction check
----> Package docker-engine.x86_64 0:1.11.2-1.el7.centos will be installed
---> Processing Dependency: docker-engine-selinux >= 1.11.2-1.el7.centos for package: docker-engine-1.11.2-1.el7.centos.x86_64
---> Processing Dependency: libcgroup for package: docker-engine-1.11.2-1.el7.centos.x86_64
---> Processing Dependency: libltdl.so.7()(64bit) for package: docker-engine-1.11.2-1.el7.centos.x86_64
-[...]
+---> Package docker-engine.x86_64 0:18.06.0.ce-1.el7.centos will be installed
+--> Processing Dependency: docker-engine-selinux >= 18.06.0.ce-1.el7.centos for package: docker-engine-18.06.0.ce-1.el7.centos.x86_64
+--> Processing Dependency: libltdl.so.7()(64bit) for package: docker-engine-18.06.0.ce-1.el7.centos.x86_64
+--> Running transaction check
+---> Package docker-engine-selinux.noarch 0:18.06.0.ce-1.el7.centos will be installed
+---> Package libtool-ltdl.x86_64 0:2.4.2-22.el7_3 will be installed
+--> Finished Dependency Resolution
 
-============================================================================================================
- Package                        Arch                Version                   Repository               Size
-============================================================================================================
+Dependencies Resolved
+
+=========================================================================================================
+ Package                       Arch           Version                           Repository          Size
+=========================================================================================================
 Installing:
- docker-engine                  x86_64              1.11.2-1.el7.centos       dockerrepo               13 M
+ docker-engine                 x86_64         18.06.0.ce-1.el7.centos           dockerrepo          19 M
 Installing for dependencies:
- audit-libs-python              x86_64              2.4.1-5.el7               base                     69 k
- checkpolicy                    x86_64              2.1.12-6.el7              base                    247 k
- docker-engine-selinux          noarch              1.11.2-1.el7.centos       dockerrepo               28 k
- libcgroup                      x86_64              0.41-8.el7                base                     64 k
- libsemanage-python             x86_64              2.1.10-18.el7             base                     94 k
- libtool-ltdl                   x86_64              2.4.2-20.el7              base                     49 k
- policycoreutils-python         x86_64              2.2.5-20.el7              base                    435 k
- python-IPy                     noarch              0.75-6.el7                base                     32 k
- setools-libs                   x86_64              3.3.7-46.el7              base                    485 k
+ docker-engine-selinux         noarch         18.06.0.ce-1.el7.centos           dockerrepo          28 k
+ libtool-ltdl                  x86_64         2.4.2-22.el7_3                    base                49 k
 
 Transaction Summary
-============================================================================================================
-Install  1 Package (+9 Dependent packages)
+=========================================================================================================
+Install  1 Package (+2 Dependent packages)
 
-Total download size: 15 M
-Installed size: 59 M
+Total download size: 20 M
+Installed size: 70 M
 Is this ok [y/d/N]: y
 Downloading packages:.
 [...]
@@ -249,12 +265,17 @@ Downloading packages:.
 
 ### Check installation
 
+`#` **`systemctl status docker`**
+
 Check that the correct version is installed and operational:
 
 `#` **`docker --version`**
 ```
-Docker version 1.11.2, build b9f10c9
+Docker version 18.05.0-ce, build f150324
 ```
+Note : The version could be different on your system.
+
+
 `#` **`docker info`**
 ```
 Containers: 0
@@ -262,7 +283,7 @@ Containers: 0
  Paused: 0
  Stopped: 0
 Images: 0
-Server Version: 1.11.2
+Server Version: 18.06.1-ce
 Storage Driver: devicemapper
  Pool Name: docker-253:2-130978-pool
  Pool Blocksize: 65.54 kB
@@ -286,12 +307,13 @@ Total Memory: 15.39 GiB
 Name: lab3.labossi.hpintelco.org
 ID: JFU6:LTUL:UOB2:4NEE:IZFC:FZK7:INUC:7ABM:JRVG:NQOS:VSXH:4XMG
 Docker Root Dir: /var/lib/docker
-Debug mode (client): false
-Debug mode (server): false
+Debug Mode (client): false
+Debug Mode (server): false
 Registry: https://index.docker.io/v1/
 WARNING: bridge-nf-call-iptables is disabled
 WARNING: bridge-nf-call-ip6tables is disabled
 ```
+
 `#` **`docker `**
 
 [Display online help]
@@ -330,16 +352,18 @@ For more examples and ideas, visit:
  http://docs.docker.com/userguide/
 ```
 
-So we've got a success! Of course, we do not really go far, but what can you expect from an hello-world example ;-) 
+So we've got a success! Of course, we do not really go far, but what can you expect from an hello-world example ;-)
 
 However, we can get some info on our modified Docker environment:
 
-`#` **`docker images`**
+`#` **`docker images`** or **`docker image ls`**
+
+Note : Command line has been refined in order to be more conscistant, the first command is the legacy one. The second command is the new behavior.
 ```
 REPOSITORY     TAG            IMAGE ID       CREATED          VIRTUAL SIZE
 hello-world    latest         91c95931e552   10 weeks ago     910 B
 ```
-`#` **`docker ps -a`**
+`#` **`docker ps -a`** or **`docker container ls -a`**
 ```
 CONTAINER ID        IMAGE               COMMAND             CREATED             STATUS              PORTS               NAMES
 4dba332aec93d        hello-world         "/hello"            14 minutes ago      Exited (0) 14 minutes ago                       cocky_hopper
@@ -364,18 +388,17 @@ In order to have a more interesting environment, we'll now look for existing con
 
 `#` **`docker search fedora`**
 ```
-NAME         DESCRIPTION                    STARS    OFFICIAL  AUTOMATED
-fedora       Official Fedora 22 base image  175      [OK]
-tutum/fedora Fedora image with SSH access.  7                  [OK]
+NAME                                 DESCRIPTION                                     STARS               OFFICIAL            AUTOMATED
+fedora                               Official Docker builds of Fedora                665                 [OK]
+mattdm/fedora                        A basic Fedora image corresponding roughly t…   49
 [...]
 ```
 `#` **`docker pull fedora`**
 ```
-latest: Pulling from fedora
-48ecf305d2cf: Pull complete
-ded7cd95e059: Already exists
-fedora:latest: The image you are pulling has been verified. Important: image verification is a tech preview feature and should not be relied on to provide security.
-Digest: sha256:10ba981a70632d7764c21deae25c6521db6d39730e1dd8caff90719013858a7b
+Using default tag: latest
+latest: Pulling from library/fedora
+e71c36a80ba9: Pull complete
+Digest: sha256:7ae08e5637170eb47c01e315b6e64e0d48c6200d2942c695d0bee61b38c65b39
 Status: Downloaded newer image for fedora:latest
 ```
 
@@ -384,61 +407,51 @@ Once the container image has been downloaded we can view it in our catalog of im
 `#` **`docker images`**
 ```
 REPOSITORY    TAG        IMAGE ID          CREATED            VIRTUAL SIZE
-fedora        latest     ded7cd95e059      4 weeks ago        186.5 MB
-hello-world   latest     91c95931e552      10 weeks ago       910 B
-```
+REPOSITORY          TAG                 IMAGE ID            CREATED             SIZE
+fedora              latest              cc510acfcd70        6 weeks ago         253MB
+hello-world         latest              e38bc07ac18e        2 months ago        1.85kB```
 
 This content is called an image and will serve as the base to create the operational container (here based on Fedora) in which we will process data:
 
-`#` **`docker run -ti ded7cd95e059 /bin/bash`**
+`#` **`docker run -ti cc510acfcd70 /bin/bash`**
 
 `[root@ad9b474525d0 /]#` **`cat /etc/fedora-release`**
 ```
-Fedora release 22 (Twenty Two)
+Fedora release 28 (Twenty Eight)
 ```
-`[root@ad9b474525d0 /]#` **`yum install -y wget`**
+`[root@ad9b474525d0 /]#` **`dnf install -y wget`**
 ```
-Yum command has been deprecated, redirecting to '/usr/bin/dnf install wget'.
-[...]
-Fedora 22 - x86_64                             3.7 MB/s |  41 MB     00:11
-Fedora 22 - x86_64 - Updates                   1.7 MB/s | 9.7 MB     00:05
-Last metadata expiration check performed 0:00:04 ago on Tue Jun 30 10:38:14 2015.
+Last metadata expiration check: 0:00:55 ago on Sun Jun 17 20:16:57 2018.
 Dependencies resolved.
 ==========================================================================
  Package               Arch   Version        Repository               Size
 ==========================================================================
 Installing:
- libicu                x86_64 54.1-1.fc22    fedora                  8.4 M
- libpsl                x86_64 0.7.0-3.fc22   fedora                   50 k
- wget                  x86_64 1.16.3-1.fc22  fedora                  577 k
+ wget                 x86_64  1.19.5-1.fc28  updates                 719 k
 
 Transaction Summary
 ==========================================================================
-Install  3 Packages
+Install  1 Package
 
-Total download size: 9.0 M
-Installed size: 31 M
+Total download size: 719 k
+Installed size: 2.8 M
 Downloading Packages:
-(1/3): libpsl-0.7.0-3.fc22.x86_64.rpm           16 kB/s |  50 kB     00:03
-(2/3): wget-1.16.3-1.fc22.x86_64.rpm           176 kB/s | 577 kB     00:03
-(3/3): libicu-54.1-1.fc22.x86_64.rpm           1.8 MB/s | 8.4 MB     00:04
+wget-1.19.5-1.fc28.x86_64.rpm                            8.7 MB/s | 719 kB     00:00
 --------------------------------------------------------------------------
-Total                                                                                                                     1.4 MB/s | 9.0 MB     00:06
+Total                                                    700 kB/s | 719 kB     00:01
 Running transaction check
 Transaction check succeeded.
 Running transaction test
 Transaction test succeeded.
 Running transaction
-  Installing  : libicu-54.1-1.fc22.x86_64                              1/3
-warning: Unable to get systemd shutdown inhibition lock
-  Installing  : libpsl-0.7.0-3.fc22.x86_64                             2/3
-  Installing  : wget-1.16.3-1.fc22.x86_64                              3/3
-  Verifying   : wget-1.16.3-1.fc22.x86_64                              1/3
-  Verifying   : libpsl-0.7.0-3.fc22.x86_64                             2/3
-  Verifying   : libicu-54.1-1.fc22.x86_64                              3/3
+  Preparing        :                                                       1/1
+  Installing       : wget-1.19.5-1.fc28.x86_64                             1/1
+  Running scriptlet: wget-1.19.5-1.fc28.x86_64                             1/1
+install-info: No such file or directory for /usr/share/info/wget.info.gz
+  Verifying        : wget-1.19.5-1.fc28.x86_64                             1/1
 
 Installed:
-  libicu.x86_64 54.1-1.fc22 libpsl.x86_64 0.7.0-3.fc22 wget.x86_64 1.16.3-1.fc22
+  wget.x86_64 1.19.5-1.fc28
 
 Complete!
 
@@ -453,7 +466,7 @@ Linux ad9b474525d0 3.10.0-327.el7.x86_64 #1 SMP Thu Oct 29 17:29:29 EDT 2015 x86
 ```
 
 
-So you checked that your container behaves like a Fedora 22 distribution. Only the kernel is shared between the Docker host and the Docker container. Open another console to view how this container has been created ans is seen:
+So you checked that your container behaves like a Fedora 28 distribution. Only the kernel is shared between the Docker host and the Docker container. Open another console to view how this container has been created and is seen:
 
 `#` **`docker ps`**
 ```
@@ -471,7 +484,7 @@ CONTAINER ID        IMAGE               COMMAND             CREATED             
 `#` **`docker ps -a`**
 ```
 CONTAINER ID        IMAGE               COMMAND             CREATED             STATUS                     PORTS               NAMES
-ad9b474525d0        ded7cd95e059        "/bin/bash"         23 minutes ago      Exited (0) 4 seconds ago                       hopeful_hopper
+ad9b474525d0        cc510acfcd70        "/bin/bash"         23 minutes ago      Exited (0) 4 seconds ago                       hopeful_hopper
 ```
 
 So your container is seen as stopped and you have to use the -a option to see it in the history of containers created, but not active anymore.
@@ -506,6 +519,9 @@ FROM centos:6
 RUN yum install -y httpd
 EOF
 ```
+
+Note : Use **`cat Dockerfile`** to see the file content.
+
 `#` **`docker build .`**
 ```
 Sending build context to Docker daemon  12.8 kB
@@ -719,6 +735,8 @@ EXPOSE 80
 EOF
 ```
 
+Note : This is not mandatory, as this is only metadata for the image. However it will help people to know the exposed port of your image.
+
 `#` **`docker build .`**
 ```
 [...]
@@ -740,8 +758,8 @@ Modify again the Dockerfile to add owncloud to our image:
 `#` **`cat >> Dockerfile << EOF`**
 ```
 RUN yum install -y tar bzip2
-ADD http://labossi.hpintelco.net/owncloud-7.0.15.tar.bz2 /var/www/html/
-# Add this only if before docker engone 17.03
+ADD https://download.owncloud.org/community/7.0/owncloud-7.0.15.tar.bz2 /var/www/html/
+# Add this only if before docker engine 17.03
 # RUN cd /var/www/html/ && tar xvfj owncloud-7.0.15.tar.bz2 && rm -f owncloud-7.0.15.tar.bz2
 EOF
 ```
@@ -766,14 +784,15 @@ So we now have to deal with storage management for our Docker container. First w
 
 `#` **`docker exec b42f9f6f1034 ps auxww | grep httpd`**
 
-The principle is that the owner of the httpd process should have the rights on the owncloud directory to read and store files there. So modify you Dockerfile accordingly and retest.
+The principle is that the owner of the httpd process should have the rights on the owncloud directory to read and store files there. ** So modify you Dockerfile accordingly and retest **.
 
 Now you should be able to customize your owncloud instance and start using it.
+
 By now you have probably remarked that the ADD order is done each time, without any benefit from the cache management of Docker. Also you have to each time deal with IDs for containers and images, which is not that convenient. Let's fix that. Download the owncloud tar file in your directory and modify the ADD line:
 
-`#` **`wget http://labossi.hpintelco.net/owncloud-7.0.15.tar.bz2`**
+`#` **`wget https://download.owncloud.org/community/7.0/owncloud-7.0.15.tar.bz2`**
 
-`#` **`perl -pi -e 's|ADD http://labossi.hpintelco.net/owncloud-7.0.15.tar.bz2|COPY owncloud-7.0.15.tar.bz2|' Dockerfile`**
+`#` **`perl -pi -e 's|ADD https://download.owncloud.org/community/7.0/owncloud-7.0.15.tar.bz2|COPY owncloud-7.0.15.tar.bz2|' Dockerfile`**
 
 `#` **`docker build -t owncloud .`**
 
@@ -814,7 +833,9 @@ Now reload the owncloud configuration page in your browser, but this time config
 
 ![Owncloud Setup](/Docker/img/owncloud.png)
 
-If you encounter issues you need to adapt your environment so that the apache user is allowed to write on to the /data directory. Your current Dockerfile should look like this at that point:
+** If you encounter issues you need to adapt your environment so that the apache user is allowed to write on to the /data directory. **
+
+Your current Dockerfile should look like this at that point:
 
 `#` **`cat Dockerfile`**
 ```
@@ -897,13 +918,13 @@ Create the build environment by moving all our previous stuffs into a folder:
 
 `#` **`cd owncloud`**
 
-Now we can create our configuration file. We will use the new v2.0 format instead of the legacy one. The v2.0 was created to extend functionalities and can be activated by specifying the release at the top of the file.
+Now we can create our configuration file. We will use the new v3.0 format instead of the legacy one. The v3.0 was created to extend functionalities and can be activated by specifying the release at the top of the file.
 
-Note : Of course old docker-compose binaries don't manage v2.0.
+Note : Of course old docker-compose binaries don't manage v3.0, you can find support information [here](https://docs.docker.com/compose/compose-file/#compose-and-docker-compatibility-matrix)
 
 `#` **`cat > docker-compose.yml << EOF`**
 ```
-version: '2'
+version: '3'
 services:
   web:
     build: .
@@ -930,7 +951,7 @@ CONTAINER ID        IMAGE               COMMAND                  CREATED        
 2573be6f1401        owncloud_web        "/bin/sh -c '/usr/sbi"   35 seconds ago      Up 34 seconds       0.0.0.0:80->80/tcp   owncloud_web_1
 ```
 
-Our application starts and should work the same way as previously. However it is much simpler because we don't need to define ports and storage mapping, also the YAML file can be held in  and this information can be managed in Configuration Management System.
+Our application starts and should work the same way as previously. However it is much simpler because we don't need to define ports and storage mapping using the command line, also the YAML file can be held in and this information can be managed in Configuration Management System.
 
 You can also note that the container name is defined as `application_service_number` (owncloud_web_1)
 
@@ -945,7 +966,7 @@ Removing network owncloud_default
 
 Check what happens to the container.
 
-Ok that's cool, but it is not really a big change.
+Ok that's cool, but it is not really a big change so far.
 
 ## Going further with docker-compose.yml
 
@@ -969,7 +990,7 @@ Of course it requires some information about the compose-file format. Documentat
 
   1. Try to modify `docker-compose.yml` to add a db service based on the mariadb official images.
   2. We need to provide the database parameters fields (user, password etc...). Hint: Look at the mariadb container environment variables. **Discuss with your trainer if you're stuck !**
-  3. What is the hostname of our container ? Hint: Look at the link directive.
+  3. What is the hostname of our container ? Hint: Look at the links or preferred network directive to allow db container connection from the web container.
 
 If you didn't manage to configure the mariadb container and use it with owncloud, then the additional content for your docker-compose.yml could be useful:
 ```
@@ -988,9 +1009,9 @@ We are now using a mariadb container, but the database content is inside the con
   1. Use a Docker volume to use them from the host.
   2. Modify docker-compose.yml to do that. Hint: separate owncloud and db data under /data to avoid user rights conflicts.
 
-If you manage to configure the mariadb container with persistant data your docker-compose.yml should look like this:
+If you manage to configure the mariadb container with persistent data your docker-compose.yml should look like this:
 ```
-version: '2'
+version: '3'
 services:
   web:
     build: .
@@ -998,8 +1019,10 @@ services:
       - /data/owncloud:/data/owncloud
     ports:
       - "80:80"
-    links:
-      - db:mariadb
+    networks:
+      - oclan
+    depends_on:
+      - db
   db:
     image: mariadb
     environment:
@@ -1007,8 +1030,13 @@ services:
       - MYSQL_DATABASE=owncloud
       - MYSQL_USER=owncloud
       - MYSQL_PASSWORD=owncloudpwd
+    networks:
+      - oclan
     volumes:
       - /data/db:/var/lib/mysql
+networks:
+  oclan:
+    driver: bridge
 ```
 
 `#` **`docker-compose ps`**
@@ -1019,7 +1047,11 @@ owncloud_db_1    docker-entrypoint.sh mysqld      Up      3306/tcp
 owncloud_web_1   /bin/sh -c /usr/sbin/apach ...   Up      0.0.0.0:80->80/tcp
 ```
 
-You would like to try to allow scalability for your application by scaling the
+Try to change the listening port inside your docker-compose.yml file and perform a `docker-compose -up -d`
+
+You can notice that only the services that need to be modified are recreated.
+
+You may like to try to allow scalability for your application by scaling the
 web service
 
 `#` **`docker-compose scale web=2`**
@@ -1027,6 +1059,7 @@ web service
 Detect whether this is working or not and why. If not, we'll find another way
 to solve this.
 
+Bonus, you can try to update the docker-compose.yml file to add an ha-proxy instance in front of the web services.
 
 # Using docker-machine to create Docker hosts
 
@@ -1071,6 +1104,10 @@ It is used to provide high availability for Docker containers.
 
 A really complete and excellent workshop is available for Swarm at https://jpetazzo.github.io/orchestration-workshop
 We extracted lots of ideas from it to lead you towards a first understanding of Swarm.
+
+We will deploy a 5 nodes (3 X master + 2 X workers) cluster.
+
+Note : If you are late on this lab, you can just use 1 X master and 2 workers, but do not stop the master in further steps.
 
 ## Installing Docker Swarm
 
@@ -1172,6 +1209,8 @@ of managers. Here we can promote 2 of our workers as managers. For that, we
 need to get another token, the manager one, instead of the worker one we used
 previously.
 
+Note : If you deployed only 3 nodes, you can not add managers, so skip this part.
+
 `#` **`docker swarm join-token -q manager`**
 ```
 SWMTKN-1-444fdgnkvchgol08ck8rexwhxg8hbvwncyqs61mvcu0b3978qs-cw10maud95375a2t35p7m5kox
@@ -1203,20 +1242,23 @@ let's create a simple service to test our cluster:
 
 `#` **`docker service create alpine ping 8.8.8.8`**
 ```
-ag12vg6ts417gj4r2y2w57j5q
+v12wk2jruwhltftgv5xalaped
+overall progress: 1 out of 1 tasks 
+1/1: running   [==================================================>] 
+verify: Service converged 
 ```
 
 `#` **`docker service ls`**
 ```
-ID            NAME         REPLICAS  IMAGE   COMMAND
-ag12vg6ts417  tiny_curran  1/1       alpine  ping 8.8.8.8
+ID                  NAME                MODE                REPLICAS            IMAGE               PORTS
+v12wk2jruwhl        relaxed_morse       replicated          1/1                 alpine:latest       
 
 ```
 
-`#` **`docker service ps ag1`**
+`#` **`docker service ps v12`**
 ```
-ID                         NAME                   IMAGE   NODE     DESIRED STATE  CURRENT STATE              ERROR
-9aq9iq25ayhp1nk11ems7tsly  tiny_curran.1  alpine  c6.labossi.hpintelco.org  Running        Running 35 seconds ago
+ID                         NAME             IMAGE          NODE                      DESIRED STATE  CURRENT STATE              ERROR               PORTS
+9aq9iq25ayhp1nk11ems7tsly  relaxed_morse.1  alpine:latest  c6.labossi.hpintelco.org  Running        Running 35 seconds ago
 ```
 
 Use the Docker commands to check how the container is behaving in your
@@ -1225,9 +1267,21 @@ cluster behaviour.
 
 You can scale that service:
 
-`#` **`docker service update ag1 --replicas 10`**
+`#` **`docker service update v12 --replicas 10`**
 ```
-ag1
+v12
+overall progress: 10 out of 10 tasks 
+1/10: running   [==================================================>] 
+2/10: running   [==================================================>] 
+3/10: running   [==================================================>] 
+4/10: running   [==================================================>] 
+5/10: running   [==================================================>] 
+6/10: running   [==================================================>] 
+7/10: running   [==================================================>] 
+8/10: running   [==================================================>] 
+9/10: running   [==================================================>] 
+10/10: running   [==================================================>] 
+verify: Service converged 
 ```
 
 Check what happens. You can use docker ps on the current node, and on another node.
@@ -1236,24 +1290,30 @@ In order to help visualize the state of the Swarm cluster you can use the visual
 
 `#` **`docker run -it -d -p 8080:8080 -v /var/run/docker.sock:/var/run/docker.sock manomarks/visualizer`**
 
+or using the service notion:
+
+`#` **`docker service create --name=viz --publish=8080:8080/tcp --constraint=node.role==manager --mount=type=bind,src=/var/run/docker.sock,dst=/var/run/docker.sock dockersamples/visualizer`**
+
 And then connect your browser to it on port 8080. You should see something similar to the below image:
 ![Swarm Visualizer](/Docker/img/visualizer.png)
 
-Now let's put on our cluster our application. With recent versions of docker-compose, there is the new notion of stack to orchestrate services. Adapt your docker-compose to use it following the below model:
+Here you can experiment on meshing, connecting to any node, should send you to the required application.
+
+Now let's deploy our application on our cluster. With recent versions of docker-compose, there is the new notion of stack to orchestrate services. Adapt your docker-compose to use it following the below model:
 ```
 version: '3'
 services:
   web:
-    build: .
+    image: owncloud_web   # use previously generated image (used to be build: .)
     volumes:
       - /data/owncloud:/data/owncloud
       - /data/config:/var/www/html/owncloud/config
     ports:
       - "8000:80"
-    links:
-      - db:mariadb
     networks:
-      oclan:
+      - oclan
+    depends_on:
+      - db
   db:
     image: mariadb
     ports:
@@ -1266,15 +1326,15 @@ services:
     volumes:
       - /data/db:/var/lib/mysql
     networks:
-      oclan:
-        aliases:
-          - db
+      - oclan
 networks:
-    oclan:
-        driver: overlay
+  oclan:
+    driver: overlay      # use overlay network
 ```
 
-Compared to the v2 file, the main change is that you're now defining in it your network to allow communication between containers
+Note : The overlay network is a network that will use VXLAN technology to create a private network between hosts, which could be in the diffrent subnets.
+
+Note 2 : behind the scene the init phase of swarm did a lot of complex things, VXLAN, security (everything is on top of TLS), meshing, load balancing. Also note that load balancing on physical nodes must be achieved by an external mechanism. Really nice job !
 
 Now start your stack:
 
@@ -1285,6 +1345,14 @@ Ignoring unsupported options: build, links
 Creating service oc_web
 Creating service oc_db
 ```
+
+`#` **`docker service ls`**
+```
+ID                  NAME                MODE                REPLICAS            IMAGE                 PORTS
+dm2j7n185u53        oc_db               replicated          1/1                 mariadb:latest        
+g26e0mhakd6x        oc_web              replicated          1/1                 owncloud_web:latest   *:80->80/tcp
+v12wk2jruwhl        relaxed_morse       replicated          10/10               alpine:latest         
+
 You may have some problems with this. Try to understand what happens and solve your issues. How many replicas are working ? Where are the images to use ? Which node can use them ?
 Hint: use the command `docker stack services oc` to help diagnose. And as usual talk to your instructor !
 
@@ -1337,7 +1405,11 @@ Let's configure NFS on the first machine (10.11.51.136 in my case):
 
 or
 
-`#` **`apt-get install -y nfs-server`** # Ubuntu
+`#` **`apt-get install -y nfs-server`** # Ubuntu before 18.04
+
+or
+
+`#` **`apt-get install -y nfs-kernel-server`** # Ubuntu 18.04
 
 Edit the exports file so it looks like:
 
@@ -1349,9 +1421,25 @@ Edit the exports file so it looks like:
 ```
 `#` **`exportfs -a`**
 
-`#` **`systemctl start nfs`**
+`#` **`systemctl start nfs`** # Ubuntu before 18.04
 
-Check on another node that your NFS setup is correct.
+or 
+
+`#` **`systemctl start nfs-kernel-server`**
+
+Install on other nodes nfs client and check that your NFS setup is correct.
+
+Hint:
+
+`#` **`yum install -y nfs-utils`**
+
+`#` **`systemctl start rpc-statd`** # CentOS7
+
+or
+
+`#` **`apt-get install -y nfs-common`**
+
+`#` **`service rpc.statd start`** # Ubuntu
 
 Now you can create a Docker volume that will be used by the containers launched with a service, by amending your docker-compose file which should now look like this:
 
@@ -1366,14 +1454,12 @@ services:
       - /data/config:/var/www/html/owncloud/config
     ports:
       - "8000:80"
-    links:
-      - db:mariadb
     networks:
-      oclan:
+      - oclan
   db:
     image: mariadb
     ports:
-      - "3306:3306"
+      - "3306:3306"        # note that this port is exposed for the following part
     environment:
       - MYSQL_ROOT_PASSWORD=password
       - MYSQL_DATABASE=owncloud
@@ -1382,9 +1468,7 @@ services:
     volumes:
       - dbvol:/var/lib/mysql
     networks:
-      oclan:
-        aliases:
-          - db
+      - oclan
 networks:
     oclan:
         driver: overlay
@@ -1394,7 +1478,7 @@ volumes:
     driver: local
     driver_opts:
       type: nfs
-      o: addr=10.11.51.136,rw
+      o: addr=10.11.51.136,rw,nfsvers=4.1    # this is required to have locks as nfs V3 does not support lock required by mariadb
       device: ":/data/db"
 ```
 
@@ -1412,22 +1496,11 @@ Note that you have to do it on all the engines of your Swarm cluster for this me
 Is that now working as expected ? If you use Docker 17.03+ you should have the docker service logs command now to help you diagnose your issue. If not, then tip is to use docker service ps <svc_id> to find on which host runs the service and then docker exec/logs on that host e.g. Also think to the /var/log/messages log file on your host.
 
 Can you have access to the database with the mysql command from your host (install the command if you need it) ? Check that the volume is mounted correctly in the container. Check that you can reach the mysql daemon from any host in the cluster. For mysql to work correctly using an NFS exported directory for its files, you will need to have the rpc.statd daemon running on all nodes of your cluster.
-Hint:
-
-`#` **`yum install -y nfs-utils`**
-
-`#` **`systemctl start rpc-statd`** # CentOS7
-
-or
-
-`#` **`apt-get install -y nfs-common`**
-
-`#` **`service rpc.statd start`** # Ubuntu
 
 Create a temporary table in the owncloud database to check and then relaunch the service to verify the persistency of the DB.
 MariaDB hint:
 
-`#` **`mysql -uowncloud -powncloudpwd`**
+`#` **`mysql -h <one node> -uowncloud -powncloudpwd`**
 
 `MariaDB [(none)]>` **`use owncloud;`**
 
@@ -1439,7 +1512,7 @@ MariaDB hint:
 
 Once all this is solved, you can try dealing with the web frontend. Adopt a similar approach (NFS volume and service). Check that the communication between owncloud and the DB works fine.
 
-You may be affected as myself by remaining bugs such as https://github.com/docker/docker/issues/20486 or https://github.com/docker/docker/issues/25981, especially mixing tests with docker-compose and swarm. For me, the only way to turn around them was to reboot the full cluster completely.
+You may be affected as myself by remaining bugs with previous versions of docker, such as https://github.com/docker/docker/issues/20486 or https://github.com/docker/docker/issues/25981, especially mixing tests with docker-compose and swarm. For me, the only way to turn around them was to reboot the full cluster completely.
 
 Observe what happens when you restart a Docker service on a node hosting one of the 2 services.
 
@@ -1458,7 +1531,7 @@ Let's explain first the application and its goal.
 ## Objectives
 
 In this section, we will create a promotional lottery for an e-commerce site.
-All the software components are provided, you'll "just" have to perform a partial containerzation of the service.
+All the software components are provided, you'll "just" have to perform a partial containerization of the service.
 
 As the setup takes some time, we'll start with the instructions and then you'll have time to read the explanations.
 
@@ -1466,12 +1539,12 @@ First have access to the application we developed for this.
 
 `#` **`yum install -y git`**
 
-`#` **`git clone https://github.com/bcornec/openstack_lab.git`**
+`#` **`git clone https://github.com/bcornec/cloud_native_app.git`**
 
 `#` **`cd cloud_native_app`**
 
-As you can see in the openstack_lab directory created, the same application can be used for a Docker or an OpenStack usage (or combining them).
-The application is still a WIP, so don't worry with all the additional files and directories for now. Upstream is at https://github.com/uggla/openstack_lab.git alongside its documentation.
+As you can see in the cloud_native_app directory created, the same application can be used for a Docker or an OpenStack usage (or combining them).
+The application is still a WIP/Demo, so don't worry with all the additional files and directories for now. Upstream is at https://github.com/uggla/openstack_lab.git alongside its documentation.
 
 We need first to run the application locally using the compose file, in order to create all the Docker images and to upload them into the registry.
 
@@ -1514,7 +1587,9 @@ cn81a9a5j8yi  w1           1/1       lab7-2.labossi.hpintelco.org:5500/cloudnati
 e6c6ypgcxdy2  p            1/1       lab7-2.labossi.hpintelco.org:5500/cloudnativeapp_p
 ```
 
-In order to use the application you'll now have to connect to your system hosting th web application (in our case http://c6.labossi.hpintelco.org/)
+In order to use the application you'll now have to connect to your system hosting the web application (in our case http://c6.labossi.hpintelco.org/)
+
+![cna](Docker/img/cna.png)
 
 You should see a message in your browser saying:
 ```

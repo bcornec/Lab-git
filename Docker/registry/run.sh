@@ -1,7 +1,7 @@
 #!/bin/bash
 # Modify openssl.cnf to activate extensions (SAN)
 sed -i -e 's/# req_extensions = v3_req/req_extensions = v3_req/' /etc/pki/tls/openssl.cnf
-sed -i -e '/keyUsage = nonRepudiation, digitalSignature, keyEncipherment/ a subjectAltName = @alt_names' /etc/pki/tls/openssl.cnf
+sed -i -e '/^keyUsage = nonRepudiation, digitalSignature, keyEncipherment/ a subjectAltName = @alt_names' /etc/pki/tls/openssl.cnf
 cat << EOF >>/etc/pki/tls/openssl.cnf
 [alt_names]
 DNS.1 = $PUBFQDN
