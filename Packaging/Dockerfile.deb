@@ -1,7 +1,7 @@
 FROM debian:9
 MAINTAINER bruno@flossita.org
 RUN apt-get update
-RUN apt-get install -y wget make patch sudo openssh-server
+RUN apt-get install -y wget make patch sudo dh-make apt-file lintian openssh-server
 RUN useradd -m -s /bin/bash -d /home/pkg -p '$6$73bamKZx$iFZTDUAFRRTvcG88zOt1j30Tr/CKqEukhdvgdIV8IkAEZHdNV3pNPPQPgM8jOazbFkk8IEgn2cWVv0PRHxg17.' pkg
 RUN echo "pkg   ALL=(ALL)       NOPASSWD: ALL" >> /etc/sudoers
 COPY ssh_host_rsa_key /etc/ssh/ssh_host_rsa_key
