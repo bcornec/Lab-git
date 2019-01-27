@@ -404,7 +404,7 @@ cp %{SOURCE0} $RPM_BUILD_ROOT/%{_bindir}
 
 We commented the `%prep` and `%build` phases as we do not have anything to build yet. We just need to copy one file at installation time. Also we need to refer to it in the files section, so the package knows which files it manages (there is no magic, if you don't tell it, rpm won't guess).
 
-We used the %{_bindir} to describe the place to install the binary. This a rpm macro that we're just using. If you want to have an idea of rpm macros issue the following command:
+We used the %{_bindir} to describe the place to install the binary. This a rpm macro that we're just using. If you want to have an idea of rpm macros, issue the following command:
 
 `$` **`rpm --showrc`**
 
@@ -666,7 +666,7 @@ See mailing list at http://www.none.net for technical support.
 .SH AUTHORS
 .BR
 Bruno Cornec (lead-development) 
-.I "bruno_at_hpe.com"
+.I "pingouin_at_hpe.com"
 .
 EOF
 ```
@@ -736,7 +736,7 @@ Rebuild again your package with `rpmbuild`. On the generated package, using the 
 1 packages and 0 specfiles checked; 0 errors, 0 warnings.
 ```
 
-and now install it. Why does it not work as expected ?
+and now install it. Why doesn't it work as expected ?
 
 If you're stuck here, feel free to raise your hand so your instructor can help you !
 
@@ -748,7 +748,7 @@ Preparing...                          ################################# [100%]
         package hello-world-1.0-1.noarch is already installed
 ```
 
-then, this is normal ;-) The package you just built has no obvious or distinctive difference with the one which is alread installed. However, you did change the specfile and rebuilt the package. So one way to solve this would be as before to first remove the previous package and then reinstall. That would work, but is cheating. What you really need to do is indicate to the RPM system that you changed the way you build thepackage. This is what the Release tag is made for. Each time you change your specfile, and want to install or distribute the resulting packages, then you need to increase the Release tag. So here replace the 1 by 2 in the spec file, rebuild and try again to install using the `-F` or `-U` option of the `rpm` command, not the `-i`.
+then, this is normal ;-) The package you just built has no obvious or distinctive difference with the one which is alread installed. However, you did change the specfile and rebuilt the package. So one way to solve this would be as before to first remove the previous package and then reinstall. That would work, but is cheating. What you really need to do is indicate to the RPM system that you changed the way you build the package. This is what the Release tag is made for. Each time you change your specfile, and want to install or distribute the resulting packages, then you need to increase the Release tag. So here replace the 1 by 2 in the spec file, rebuild and try again to install using the `-F` or `-U` option of the `rpm` command, not the `-i`.
 
 Do not forget to update the changlog part of the spec file with a new entry !
 
@@ -760,9 +760,9 @@ As you can see, building a correct RPM Package is an iterative process that can 
 
 Estimated time: 10 minutes.
 
-Of course, we can use the `rpm` command to install our package. But what abour `yum` ? How to share our package so others can also install it easily ? That's what we'll see just now !
+Of course, we can use the `rpm` command to install our package. But what about `yum` ? How to share our package so others can also install it easily ? That's what we'll see just now !
 
-To work correctly, yum needs to group the RPM metadata that you can see in the package using `rpm -qi` into central files that yum will use to determine how to install a given package and its dependencies. For that, you need to use the `createrepo` command, part of the eponym package if you don't have it installed:
+To work correctly, `yum` needs to group the RPM metadata that you can see in the package using `rpm -qi` into central files that `yum` will use to determine how to install a given package and its dependencies. For that, you need to use the `createrepo` command, part of the eponym package if you don't have it installed:
 
 `$` **`cd /home/pkg/rpmbuild/RPMS`**
 
@@ -883,7 +883,12 @@ All that is nice and fine, but it would be better if it could be working also fr
 
 `#` **`yum install vsftpd`**
 
-`#` **`systemctl start vsftpd`**
+`#` **`/usr/sbin/vsftpd /etc/vsftpd/vsftpd.conf &`**
+
+#
+#Or if you can use systemd
+#
+#`#` **`systemctl start vsftpd`**
 
 `#` **`mv /home/pkg/rpmbuild/RPMS /var/ftp`**
 
@@ -1349,7 +1354,9 @@ dpkg-genchanges: info: including full source code in upload
 dpkg-buildpackage: info: full upload (original source is included)
 ```
 
-So this works ! Hey, that's Debian ;-) But of course, you don't really get what you want:
+So this works ! Hey, that's Debian ;-) 
+
+But of course, you don't really get what you want:
 
 `$` **`ls -l ..`**
 ```
