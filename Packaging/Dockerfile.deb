@@ -1,0 +1,17 @@
+FROM debian:9
+MAINTAINER bruno@flossita.org
+RUN apt-get update
+RUN apt-get install -y wget make patch sudo openssh-server
+RUN useradd -m -s /bin/bash -d /home/pkg -p '$6$73bamKZx$iFZTDUAFRRTvcG88zOt1j30Tr/CKqEukhdvgdIV8IkAEZHdNV3pNPPQPgM8jOazbFkk8IEgn2cWVv0PRHxg17.' pkg
+RUN echo "pkg   ALL=(ALL)       NOPASSWD: ALL" >> /etc/sudoers
+COPY ssh_host_rsa_key /etc/ssh/ssh_host_rsa_key
+COPY ssh_host_rsa_key.pub /etc/ssh/ssh_host_rsa_key.pub
+COPY ssh_host_ecdsa_key /etc/ssh/ssh_host_ecdsa_key
+COPY ssh_host_ecdsa_key.pub /etc/ssh/ssh_host_ecdsa_key.pub
+COPY ssh_host_ed25519_key /etc/ssh/ssh_host_ed25519_key
+COPY ssh_host_ed25519_key.pub /etc/ssh/ssh_host_ed25519_key.pub
+RUN mkdir /run/sshd
+#RUN chown -R pkg /home/pkg
+WORKDIR /home/pkg
+USER pkg
+ENTRYPOINT sudo /usr/sbin/sshd -D
