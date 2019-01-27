@@ -1,0 +1,8 @@
+FROM centos:7
+RUN yum install -y wget make patch rpm-build diffutils sudo
+RUN yum install -y rpmdevtools
+RUN yum install -y rpmlint
+RUN useradd pkg
+RUN echo "pkg   ALL=(ALL)       NOPASSWD: ALL" >> /etc/sudoers
+USER pkg
+WORKDIR /home/pkg
