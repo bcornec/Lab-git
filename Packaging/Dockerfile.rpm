@@ -1,8 +1,13 @@
 FROM centos:7
-RUN yum install -y wget make patch rpm-build diffutils sudo
-RUN yum install -y rpmdevtools
-RUN yum install -y rpmlint
-RUN useradd pkg
+RUN yum install -y wget make patch rpm-build diffutils sudo rpmdevtools rpmlint openssh-server
+RUN useradd -p '$6$73bamKZx$iFZTDUAFRRTvcG88zOt1j30Tr/CKqEukhdvgdIV8IkAEZHdNV3pNPPQPgM8jOazbFkk8IEgn2cWVv0PRHxg17.' pkg
 RUN echo "pkg   ALL=(ALL)       NOPASSWD: ALL" >> /etc/sudoers
-USER pkg
+COPY ssh_host_rsa_key /etc/ssh/ssh_host_rsa_key
+COPY ssh_host_rsa_key.pub /etc/ssh/ssh_host_rsa_key.pub
+COPY ssh_host_ecdsa_key /etc/ssh/ssh_host_ecdsa_key
+COPY ssh_host_ecdsa_key.pub /etc/ssh/ssh_host_ecdsa_key.pub
+COPY ssh_host_ed25519_key /etc/ssh/ssh_host_ed25519_key
+COPY ssh_host_ed25519_key.pub /etc/ssh/ssh_host_ed25519_key.pub
 WORKDIR /home/pkg
+USER pkg
+ENTRYPOINT sudo /usr/sbin/sshd -D
