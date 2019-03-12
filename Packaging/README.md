@@ -893,9 +893,9 @@ All that is nice and fine, but it would be better if it could be working also fr
 
 `#` **`yum install vsftpd`**
 
-`#` **`perl -pi -e 's|listen_ipv6=YES|listen_ipv6=NO`**
+`#` **`perl -pi -e 's|listen_ipv6=YES|listen_ipv6=NO|`**
 
-`#` **`perl -pi -e 's|listen=NO|listen=YES`**
+`#` **`perl -pi -e 's|listen=NO|listen=YES|`**
 
 `#` **`/usr/sbin/vsftpd /etc/vsftpd/vsftpd.conf &`**
 
