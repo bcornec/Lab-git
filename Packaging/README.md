@@ -23,6 +23,43 @@ When dealing with Linux packaging some docuemnt of reference might be useful to 
 
 At the start of each section there is an estimate of how long it will take to complete.
 
+# Environment setup
+Estimated time: 10 minutes
+
+## Proxy consideration
+
+This lab is usually run in our environment that has a direct access to the Internet. If you want to run this lab on your site behind a corporate proxy, you will have to configure your Linux distribution to access the Internet via your proxy.
+
+ 1. Get the proxy IP and port.
+ 2. Make sure your host can resolve the proxy address using `nslookup <proxy>`, if not use the proxy IP.
+ 3. Configure your Linux package manager to go through the proxy by exporting the http_proxy and https_proxy environment variables:
+
+```
+export http_proxy=http://<proxy name or ip>:<proxy port>
+export https_proxy=http://<proxy name or ip>:<proxy port>
+```
+
+You may have to add some of these instructions in the configuration files of the package manager to make your life easier.
+
+## Lab setup
+
+This Lab supposes that your client machine will run a Windows OS. If you're lucky to have a Linux one, don't worry as the instructions also apply to it as well.
+
+Before starting the lab exercises, your client station must be installed with the following:
+  1. An SSH client ([PuTTY](http://www.chiark.greenend.org.uk/~sgtatham/putty/download.html) on Windows clients is OK)
+  2. An HTTP client ([Firefox](http://mozilla.org) on all clients is OK)
+
+For the rest of this Lab, each team has received a lab number (**XX**) from the instructor, and we'll refer to your server as **labXX**. It's IP will be provided by the instructor, and the port to use to connect to it with ssh is 24XX (example 2401 for Lab 01) for the RPM based system and 23XX for the deb based system. You'll have to log on it using the **pkg** account with the password Pkgh@TSS19 
+Note that you are authorized to use sudo to become root.
+
+Test the access to your OS (a preinstalled CentOS 7 Linux distribution). 
+Answer Yes to the confirmation query.
+If the login is successful, exit from the system:
+
+`$` **`exit`**
+
+Lines started with a **`#`** are meant to be run as user root on your system, while lines starting with a **`$`** are meant to be run as the redfish user.
+
 ## Note on Linux commands
 
 If you are familiar with Linux, you can skip this section. If not please read to understand some commands.
@@ -44,36 +81,9 @@ In order to append text to the file, the first `>` can be replaced with `>>`.
 
 If you prefer, you can edit the files using **vim** or **nano** text editors.
 
-Commands to be executed as root user are prefixed with a **`#`** prompt, while commands to be executed as a normal user are prefixed with the **`$`** prompt.
+## Best practices
 
 Finally the best practice to work on packages is to **work as a normal user**, not as root. Building as root, if you have errors in your build configuration may lead to an unusable system, so it's important (and sure in general) to just adopt the minimum set of priviledges required for the operations we do. Of course, installing the package, once built, will require root priviledges as seen previously, but everything else should be performed as a normal user. You may open 2 terminals one as a user pkg (once created with the below commands), the other one as root to ease operations.
-
-So create your normal use account and switch to it:
-
-`#` **`useradd pkg`**
-
-`#` **`passwd pkg`**
-
-`#` **`su - pkg`**
-
-# Environment setup
-Estimated time: 10 minutes
-
-## Proxy consideration
-
-This lab is usually run in our environment that has a direct access to the Internet. If you want to run this lab on your site behind a corporate proxy, you will have to configure your Linux distribution to access the Internet via your proxy.
-
- 1. Get the proxy IP and port.
- 2. Make sure your host can resolve the proxy address using `nslookup <proxy>`, if not use the proxy IP.
- 3. Configure your Linux package manager to go through the proxy by exporting the http_proxy and https_proxy environment variables:
-
-```
-export http_proxy=http://<proxy name or ip>:<proxy port>
-export https_proxy=http://<proxy name or ip>:<proxy port>
-```
-
-You may have to add some of these instructions in the configuration files of the package manager tomake your life easier.
-
 
 ## Dependencies installation
 Ask to your instructor which Linux distribution will be used for the Lab (Ubuntu or CentOS). Then refer to the corresponding instructions below.
@@ -84,7 +94,7 @@ Other distributions should be as easy to deal with once the same packages have b
 
 If you work on a CentOS 7 environment for the Lab, you may want to use yum to do the installation of all the dependencies.
 
-`#` **`yum install wget make patch rpm-build rpmdevtools rpmlint diffutils sudo`**
+`#` **`yum install wget make patch rpm-build rpmdevtools rpmlint diffutils`**
 
 ### Debian and Ubuntu installation
 
@@ -92,7 +102,7 @@ If you work on a Debian or Ubuntu environment for the Lab, you may want to use a
 
 `#` **`apt-get update`**
 
-`#` **`apt-get install wget patch dpkg-dev make debian-builder dh-make fakeroot diffutils sudo vim`**
+`#` **`apt-get install wget patch dpkg-dev make debian-builder dh-make fakeroot diffutils vim`**
 
 # Managing RPM Packages
 Estimated time: 15 minutes.
