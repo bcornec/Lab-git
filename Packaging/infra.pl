@@ -16,7 +16,7 @@ while ($i <= $nbctn) {
 	my $p = sprintf("%02d",$i);
 	system "docker stop rpm$p";
 	system "docker rm rpm$p";
-	my $cmd = "docker run -d --name rpm$p -p 22$p:22 rpm";
+	my $cmd = "docker run -d --name rpm$p -p 24$p:22 rpm";
 	print "Launching $cmd\n";
 	$res = system "$cmd";
 	exit(-1) if ($res != 0);
