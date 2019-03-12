@@ -889,9 +889,13 @@ Installed:
 Complete!
 ```
 
-All that is nice and fine, but it would be better if it could be working also from another system. For that instead of using the file:// protocol in the configuration file, we could use http:// or ftp:// instead. As ftp is very easy to setup, let's try to do it again with his after you removed again your package ;-)
+All that is nice and fine, but it would be better if it could be working also from another system. For that instead of using the file:// protocol in the configuration file, we could use http:// or ftp:// instead. As ftp is very easy to setup, let's try to do it again with his after you removed again your package ;-) (You'll need to activate the listening on IPv4 instead of IPv6 which is now the default)
 
 `#` **`yum install vsftpd`**
+
+`#` **`perl -pi -e 's|listen_ipv6=YES|listen_ipv6=NO`**
+
+`#` **`perl -pi -e 's|listen=NO|listen=YES`**
 
 `#` **`/usr/sbin/vsftpd /etc/vsftpd/vsftpd.conf &`**
 
