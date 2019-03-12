@@ -686,6 +686,7 @@ EOF
 `$` **`mv gpl.txt ../SOURCES/LICENSE`**
 
 And amend the spec file in order to use these documentation files:
+(Note: for people not familiar with this, the format below specifies lines that need to be removed from the spec file prefixed with a `-` and lines that need to be added to the spec file refixed with a `+`. In summary you have one line to change, and many lines to add here)
 
 ```
 --- hello-world.spec.old        2018-02-05 05:12:55.258477109 +0000
@@ -837,7 +838,7 @@ So great we have a repo, but now we'd like to test and use it. We'll do it on ou
 `#` **`rpm -e hello-world`**
 -->
 
-`$` **`cat > /etc/yum.repos.d/hello.repo << EOF`**
+`#` **`cat > /etc/yum.repos.d/hello.repo << EOF`**
 ```
 [hello]
 name=Hello repo
