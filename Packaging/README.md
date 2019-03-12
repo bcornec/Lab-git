@@ -49,7 +49,7 @@ Before starting the lab exercises, your client station must be installed with th
   1. An SSH client ([PuTTY](http://www.chiark.greenend.org.uk/~sgtatham/putty/download.html) on Windows clients is OK)
   2. An HTTP client ([Firefox](http://mozilla.org) on all clients is OK)
 
-For the rest of this Lab, each team has received a lab number (**XX**) from the instructor, and we'll refer to your server as **labXX**. It's IP will be provided by the instructor, and the port to use to connect to it with ssh is 24XX (example 2401 for Lab 01) for the RPM based system and 23XX for the deb based system. You'll have to log on it using the **pkg** account with the password Pkgh@TSS19 
+For the rest of this Lab, each team has received a lab number (**XX**) from the instructor, and we'll refer to your server as **labXX**. It's IP will be provided by the instructor, and the port to use to connect to it with ssh is 24XX (example 2401 for Lab 01) for the RPM based system and 23XX for the deb based system. You'll have to log on it using the **pkg** account with the password Pkg@TSS19 
 Note that you are authorized to use sudo to become root.
 
 Test the access to your OS (a preinstalled CentOS 7 Linux distribution). 
