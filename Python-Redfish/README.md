@@ -501,21 +501,29 @@ The library comes with a simple example called '`simple-proliant.py`' to use the
 
 `#` **`cd /usr/share/doc/python-redfish-0.4.1`**
 
-`#` **`more simple-proliant.py`**
+`#` **`more simple-simulator.py`**
 
-This code is a bit more 
-For the moment, please comment all the lines containing '`set_parameters`'. Then you can run:
+This code is a bit more sophisticated than the one we have deveopped in this Lab, which is normal as it manages errors more efficiently, deals with a configuration file and provide some debug details. However, it's much simpler than the full redfish-client you previously used, so is a middle way to learn the usage of the python-redfish module.
+
+If you are on a real platform, please comment all the lines containing '`set_parameters`'. 
+As the script expect the platform under test to be called default, let's do that first:
+
+`#` **`redfish-client config add default https://ilorestfulapiexplorer.ext.hpe.com/redfish/v1`**
+
+Then you can run:
 
 `#` **`python simple-proliant.py`**
+
+Of course, it won't work out of the box ;-) This is due to the fact we need to ignore the SSL certificate verfication in our context. So copy the file to your home directory and edit it to add the `verify_cert=False` parameter to the redfish.connect call (This is fixed in upcoming version 0.4.2). Try again with this new version:
+
+`#` **`python  ~/simple-proliant.py`**
+
+That should work much better, except at the end, because the default script queries a 2nd system which doesn't exist on the simulator. But you can see with the traces all the variables created with the Redfish tree in a dictionary automatically by the library, and easily usable in the main program, as you can check with the UUID or BIOS version displayed. Adapt the non-working line to display as well the Serial Number (again this is fixed in upcoming version 0.4.2).
 
 Now you can look at the python code to get data and perform some actions. The library documentation is available at: http://pythonhosted.org/python-redfish. The classes are defined here: http://pythonhosted.org/python-redfish/python-redfish_lib.html.
 
 You can then comment/uncomment and modify the code to experiment. e.g. below:
 
-Retrieve manager bios version:
-```
-print(remote_mgmt.Systems.systems_dict["1"].get_bios_version())
-```
 Retrieve chassis manufacturer:
 ```
 print(remote_mgmt.Chassis.chassis_dict["1"].get_manufacturer())
@@ -530,6 +538,16 @@ Uncommenting the following line should reboot the system on a real machine:
 # mySystem.reset_system()
 ```
 
+If you want to decrease the debug messages printed, you can add to your code the following lines:
+```
+import logging
+import requests.packages.urllib3
+[...]
+redfish.config.TORTILLADEBUG = False
+redfish.config.FILE_LOGGER_LEVEL = logging.ERROR
+redfish.config.CONSOLE_LOGGER_LEVEL = logging.ERROR
+requests.packages.urllib3.disable_warnings()
+```
 
 ## Using an existing python DMTF example
 
@@ -555,7 +573,7 @@ Then put yourself in the virtualenv configuration:
 
 `$` **`source redfish/bin/activate`**
 
-Your prompt should change to reflect that modification. You now have a completely separate python environment you can play with, without impacting the one running on the system. This is pretty handy and can also allow to manage multiple python versions in parallel. So now, let's install safely the redfish module here:
+Your prompt should change to reflect that modification. You now have a completely separate python environment you can play with, without impacting the one running on the system. This is pretty handy and can also allow to manage multiple python versions in parallel. Or as is indicated in the install instructions, to overcome the incompatibility with the previous python-redfish module. So now, let's install safely the redfish module here:
 
 `$` **`pip install redfish`**
 
@@ -563,50 +581,14 @@ That should work. And as you can remark, another advantage is that you don't nee
 
 This module provides a Redfish object with 3 attributes (URL, account, password).
 
-The following python script is for didactic purposes only, and HPE does not support it. Use it with care. It requires python 2.7 or later. Sending low-level configuration commands can be dangerous to running systems and to avoid any problem, the user must understand what he does... NOTE: This version is not fully Redfish 1.0 compliant. A future version will be.
-
-This python script contains several examples. We will explain how to run the first one and, if you have time, you will be able to run others. 
-
-A version of this script is present in your environment, but later you can download the latest version of this file from: https://github.com/HewlettPackard/python-ilorest-library
-
-Before launching the script, and for security reasons, you need to edit it with your favorite editor and perform at least three tasks. 
-
-`Host#` **`vi HpRestfulApiExamplesExperimental.py –c 1889`**
-
-Supply your iLO info around line 1889:
-  1. `host = ’10.3.222.10X’`
-  1. `iLO_loginname = ‘demopaq’`
-  1. `iLO_password = ‘password’`
-
-Comment out the `sys.exit` call around line 1902:
+If you try to use that module with the simulator, you can code it:
 ```
-# sys.exit (-1)
+import redfish
+
+REDFISH_OBJ = redfish.redfish_client(base_url="https://ilorestfulapiexplorer.ext.hpe.com", username="", password="", default_prefix='/redfish/v1')
 ```
-Move the `if False:` directive below exercice1 and remove leading spaces of exercise1:
-```
-ex1_change_bios_setting(host, 'AdminName', 'Mr. Rest',... )
-if False:
-    ex2_reset_server(host, iLO_loginname, iLO_password)
-    ex3_enable_secure_boot(host, False, iLO_loginname, iLO_password)
-[...]
-```
-Save the file and exit.
-Execute the script. It will modify the `AdminName` UEFI Bios parameter:
 
-`Host#` **`python HpRestfulApiExamplesExperimental.py`**
-
-![Python script execution](img/python-run.png)
-
-Using the REST client Browser, verify that your modification is not yet in the BIOS, but still in the pending area of the BIOS. In BIOS, you should still read `"AdminName": "Foo Bar"`:
-
-![Python script result1](img/python-result.png)
-
-In the pending area, you should see your modification:
-
-![Python script result2](img/python-result2.png)
-
-NOTE: The pending area of the BIOS will updated with your modification at next reboot.
-Feel free to try other exercises and investigate how they have been implemented in this python script.
+However, that doesn't seem to work with the HPE simulator as of now. As an exercice and contribution to that Lab, you can try to use the DMTF simulator instead to check this is working with it.
 
 At the end exit from the virtualenv configuration:
 
