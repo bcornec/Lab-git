@@ -588,7 +588,38 @@ import redfish
 REDFISH_OBJ = redfish.redfish_client(base_url="https://ilorestfulapiexplorer.ext.hpe.com", username="", password="", default_prefix='/redfish/v1')
 ```
 
-However, that doesn't seem to work with the HPE simulator as of now. As an exercice and contribution to that Lab, you can try to use the DMTF simulator instead to check this is working with it.
+However, that doesn't seem to work with the HPE simulator as of now due to the way the python library deals with such an HTTPS setup (my current analysis).
+
+So to mitigate that, you should be able to reach a local version of the iLO RESTFul simulator, at the same IP address as the Lab machine you connected to, using port 8111 with protocol http instead.
+
+So change the base_url entry upper to point to that other simulator and check whether that works (no message is good ;-)
+
+So once this is solved, you can now proceed with the rest of the doc at https://github.com/DMTF/python-redfish-library to check you can get info from the simulator using this library.
+
+Expand the previous 2 lines script so it contains:
+```
+import redfish
+import sys
+
+REDFISH_OBJ = redfish.redfish_client(base_url="http://10.122.4.145:8111/", default_prefix='/redfish/v1')
+response = REDFISH_OBJ.get("/redfish/v1/Systems/1", None)
+sys.stdout.write("%s\n" % response)
+```
+
+This library uses the urllib module and the response object has interesting attricbutes such as status, dict (which contains the full Redfish tree).
+So now you can start making a more precise query on a value of interest such as getting the BIOS version e.g.:
+
+```
+import redfish
+import sys
+
+REDFISH_OBJ = redfish.redfish_client(base_url="http://10.122.4.145:8111/", default_prefix='/redfish/v1')
+response = REDFISH_OBJ.get("/redfish/v1/Systems/1", None)
+if response.status >= 200 and response.status <= 299:
+        sys.stdout.write("BIOS Version is %s\n" % response.dict["BiosVersion"])
+else:
+        sys.stdout.write("Unable to get BIOS Version is\n")
+```
 
 At the end exit from the virtualenv configuration:
 
@@ -597,3 +628,11 @@ At the end exit from the virtualenv configuration:
 ## Conclusion
 
 The iLO RESTful API provides a rich set of means to display and modify HPE ProLiant servers. And as usual there is more than one way to do it, even in python ;-)
+
+## Additional notes
+
+To build the local simulator, use the 2 repos https://github.com/bcornec/Redfish-Mockup-Creator and https://github.com/bcornec/Redfish-Mockup-Server with their ilorestfulapiexplorer branches.
+
+First go into the Redfish-Mockup-Creator, launch `docker-compose up` and watch the Simulator being created (takes some minutes). Then go into the Redfish-Mockup-Server and again launch `docker-compose up -d`
+
+The simulator made from https://ilorestfulapiexplorer.ext.hpe.com will then run by default on port 8111 using http so you can use it with the DMTF examples.
