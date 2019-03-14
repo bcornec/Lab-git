@@ -499,24 +499,23 @@ This allows to see all the calls made, as the client is parsing the full Redfish
 
 The library comes with a simple example called '`simple-proliant.py`' to use the library itself.
 
-`#` **`cd /usr/share/doc/python-redfish-0.4.1`**
+`$` **`cd /usr/share/doc/python-redfish-0.4.1`**
 
-`#` **`more simple-simulator.py`**
+`$` **`more simple-simulator.py`**
 
 This code is a bit more sophisticated than the one we have deveopped in this Lab, which is normal as it manages errors more efficiently, deals with a configuration file and provide some debug details. However, it's much simpler than the full redfish-client you previously used, so is a middle way to learn the usage of the python-redfish module.
 
-If you are on a real platform, please comment all the lines containing '`set_parameters`'. 
 As the script expect the platform under test to be called default, let's do that first:
 
-`#` **`redfish-client config add default https://ilorestfulapiexplorer.ext.hpe.com/redfish/v1`**
+`$` **`redfish-client config add default https://ilorestfulapiexplorer.ext.hpe.com/redfish/v1`**
 
 Then you can run:
 
-`#` **`python simple-proliant.py`**
+`$` **`python simple-proliant.py`**
 
 Of course, it won't work out of the box ;-) This is due to the fact we need to ignore the SSL certificate verfication in our context. So copy the file to your home directory and edit it to add the `verify_cert=False` parameter to the redfish.connect call (This is fixed in upcoming version 0.4.2). Try again with this new version:
 
-`#` **`python  ~/simple-proliant.py`**
+`$` **`python  ~/simple-proliant.py`**
 
 That should work much better, except at the end, because the default script queries a 2nd system which doesn't exist on the simulator. But you can see with the traces all the variables created with the Redfish tree in a dictionary automatically by the library, and easily usable in the main program, as you can check with the UUID or BIOS version displayed. Adapt the non-working line to display as well the Serial Number (again this is fixed in upcoming version 0.4.2).
 
