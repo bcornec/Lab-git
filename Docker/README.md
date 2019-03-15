@@ -410,6 +410,7 @@ REPOSITORY    TAG        IMAGE ID          CREATED            VIRTUAL SIZE
 REPOSITORY          TAG                 IMAGE ID            CREATED             SIZE
 fedora              latest              cc510acfcd70        6 weeks ago         253MB
 hello-world         latest              e38bc07ac18e        2 months ago        1.85kB```
+```
 
 This content is called an image and will serve as the base to create the operational container (here based on Fedora) in which we will process data:
 
