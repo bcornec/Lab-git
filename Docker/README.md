@@ -1253,7 +1253,6 @@ verify: Service converged
 ```
 ID                  NAME                MODE                REPLICAS            IMAGE               PORTS
 v12wk2jruwhl        relaxed_morse       replicated          1/1                 alpine:latest       
-
 ```
 
 `#` **`docker service ps v12`**
