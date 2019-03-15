@@ -1349,9 +1349,10 @@ Creating service oc_db
 `#` **`docker service ls`**
 ```
 ID                  NAME                MODE                REPLICAS            IMAGE                 PORTS
-dm2j7n185u53        oc_db               replicated          1/1                 mariadb:latest        
+dm2j7n185u53        oc_db               replicated          1/1                 mariadb:latest
 g26e0mhakd6x        oc_web              replicated          1/1                 owncloud_web:latest   *:80->80/tcp
-v12wk2jruwhl        relaxed_morse       replicated          10/10               alpine:latest         
+v12wk2jruwhl        relaxed_morse       replicated          10/10               alpine:latest
+```
 
 You may have some problems with this. Try to understand what happens and solve your issues. How many replicas are working ? Where are the images to use ? Which node can use them ?
 Hint: use the command `docker stack services oc` to help diagnose. And as usual talk to your instructor !
