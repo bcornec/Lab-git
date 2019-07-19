@@ -28,4 +28,4 @@ umask 002 && openssl x509 -req -in srv/repo.csr \
 # Put the CA certificate on the web
 cp /home/pki/ca/ca.crt /var/www/html
 chown pki:pki /var/www/html/ca.crt && chmod 644 /var/www/html/ca.crt
-/usr/sbin/apachectl -DFOREGROUND -k start
+httpd -DFOREGROUND

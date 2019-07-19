@@ -1,4 +1,4 @@
-FROM fedora:28
+FROM fedora:30
 RUN dnf install -y httpd
 RUN useradd pki
 RUN chmod 755 /home/pki
