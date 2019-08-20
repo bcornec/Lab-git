@@ -51,7 +51,7 @@ Before starting the lab exercises, your client station must be installed with th
   1. An SSH client ([PuTTY](http://www.chiark.greenend.org.uk/~sgtatham/putty/download.html) on Windows clients is OK)
   2. An HTTP client ([Firefox](http://mozilla.org) on all clients is OK)
 
-For the rest of this Lab, each team has received a lab number (**XX**) from the instructor, and we'll refer to your server as **labXX**. It's IP will be provided by the instructor, and the port to use to connect to it with ssh is 22XX (example 2201 for Lab 01). You'll have to log on it using the **redfish** account with the password Redfish@TSS19
+For the rest of this Lab, each team has received a lab number (**XX**) from the instructor, and we'll refer to your server as **labXX**. Its IP will be provided by the instructor, and the port to use to connect to it with ssh is 22XX (example 2201 for Lab 01). You'll have to log on it using the **redfish** account with the password Redfish@TSS19
 
 Test the access to your OS (a preinstalled CentOS 7 Linux distribution). 
 Answer Yes to the confirmation query.
@@ -93,9 +93,9 @@ Estimated time: 15 minutes.
 
 The goal of this exercise is to understand the schemas provided by the standard and the various information one can retrieve from a Redfish managed system.
 
-If you go to the Redfish DMTF mockups provided online at https://redfish.dmtf.org/redfish/v1, you'll be able to nativate using Redfish on different type of systems. Try first the [Simple Rack-mounted Server](https://redfish.dmtf.org/redfish/mockups/v1/863) and explore the 3 main entry points that will be relevant for this lab: [Systems](https://redfish.dmtf.org/redfish/mockups/v1/863#Systems), [Chassis](https://redfish.dmtf.org/redfish/mockups/v1/863#Chassis) and [Managers](https://redfish.dmtf.org/redfish/mockups/v1/863#Managers).
+If you go to the Redfish DMTF mockups provided online at https://redfish.dmtf.org/redfish/v1, you'll be able to nativate using Redfish on different type of systems. Try first the [Simple Rack-mounted Server](https://redfish.dmtf.org/redfish/mockups/v1/893) and explore the 3 main entry points that will be relevant for this lab: [Systems](https://redfish.dmtf.org/redfish/mockups/v1/893#Systems), [Chassis](https://redfish.dmtf.org/redfish/mockups/v1/893#Chassis) and [Managers](https://redfish.dmtf.org/redfish/mockups/v1/893#Managers).
 
-In this case (a traditional rack or blade server), the Total number of “Systems” contained in the Members array is 1. Compare this with what you get when parsing the [Systems](https://redfish.dmtf.org/redfish/mockups/v1/862#Systems) entrypoint of a Blade Chassis.
+In this case (a traditional rack or blade server), the Total number of “Systems” contained in the Members array is 1. Compare this with what you get when parsing the [Systems](https://redfish.dmtf.org/redfish/mockups/v1/895#Systems) entrypoint of a Blade Chassis.
 
 On a real system, to view the properties related to item 1 of this System, you would need to use the following URL: **https://IP/redfish/v1/Systems/1**
 
@@ -107,15 +107,15 @@ A partial view of the data model is:
 
 ![Redfish Data Model](img/redfish-classes.png)
 
-Navigate now through the [Chassis](https://redfish.dmtf.org/redfish/mockups/v1/863#Chassis) link. You should notice that the it contains physical properties of the server(s).
+Navigate now through the [Chassis](https://redfish.dmtf.org/redfish/mockups/v1/893#Chassis) link. You should notice that the it contains physical properties of the server(s).
 
-Perform a similar navigation in the [Managers](https://redfish.dmtf.org/redfish/mockups/v1/863#Managers) location. What is the type of content under Managers? Confirm your findings with the data model picture just above. Find the MAC address of the BMC.
+Perform a similar navigation in the [Managers](https://redfish.dmtf.org/redfish/mockups/v1/893#Managers) location. What is the type of content under Managers? Confirm your findings with the data model picture just above. Find the MAC address of the BMC.
 
-Change mockup to look at differences when dealing with a [Bladed system](https://redfish.dmtf.org/redfish/mockups/v1/862), made of a chassis with multiple computers (look at how having an enclosure impacts the representation, find the MAC address of the enclosure management card)  or with a [Composable System](https://redfish.dmtf.org/redfish/mockups/v1/868) made of blocks of CPUs, memory and disks (look at the new Composition service in particular)
+Change mockup to look at differences when dealing with a [Bladed system](https://redfish.dmtf.org/redfish/mockups/v1/895), made of a chassis with multiple computers (look at how having an enclosure impacts the representation, find the MAC address of the enclosure management card)  or with a [Composable System](https://redfish.dmtf.org/redfish/mockups/v1/889) made of blocks of CPUs, memory and disks (look at the new Composition service in particular)
 
 ## Using the HPE iLO RESTful API Explorer
 
-Now that you have a better understanding of the Redfish Data Model, let's see what it gives on real hardware. Point your browser to the [HPE iLO RESTful API Explorer](https://ilorestfulapiexplorer.ext.hpe.com/). Explore again and remark differences. As an example, look for the BIOS entry for the system and compare the list between the mockup of the [Simple Rack-mounted Server](https://redfish.dmtf.org/redfish/mockups/v1/863) and the real system.
+Now that you have a better understanding of the Redfish Data Model, let's see what it gives on real hardware. Point your browser to the [HPE iLO RESTful API Explorer](https://ilorestfulapiexplorer.ext.hpe.com/). Explore again and remark differences. As an example, look for the BIOS entry for the system and compare the list between the mockup of the [Simple Rack-mounted Server](https://redfish.dmtf.org/redfish/mockups/v1/893) and the real system.
 
 ## Using Command Line Interface tools
 
@@ -256,6 +256,7 @@ The difference is that we now have the content in a dictionary (the data variabl
 
 `$` **`cat display-mac.py`**
 ```
+import requests
 import json
 
 req = requests.get("https://ilorestfulapiexplorer.ext.hpe.com/redfish/v1/Managers/1/EthernetInterfaces/1/", verify=False)
@@ -286,7 +287,7 @@ Of course, as you can see, this is on one hand very useful to get information ou
 Estimated time: 15 minutes
 
 The python-redfish library is a reference implementation to enable Python developers to communicate with the [Redfish API](http://www.dmtf.org/standards/redfish).
-The project is still in it's infancy but already allows to retrieve information and perform few actions.
+The project is still in its infancy but already allows to retrieve information and perform few actions.
 The goal of this project compared to the HPE or DMTF SDK is to stick to the Redfish standard to allow compatibility between HW providers. So not to manage the Oem "proprietary/private" part provided by HW company such as HPE (or only for exceptions).
 
 The project also comes with a client in order to interact with Redfish and is mainly used to validate the library.
@@ -499,7 +500,7 @@ This allows to see all the calls made, as the client is parsing the full Redfish
 
 The library comes with a simple example called '`simple-proliant.py`' to use the library itself.
 
-`$` **`cd /usr/share/doc/python-redfish-0.4.1`**
+`$` **`cd /usr/share/doc/python-redfish-0.4.2`**
 
 `$` **`more simple-simulator.py`**
 
@@ -513,11 +514,11 @@ Then you can run:
 
 `$` **`python simple-proliant.py`**
 
-Of course, it won't work out of the box ;-) This is due to the fact we need to ignore the SSL certificate verfication in our context. So copy the file to your home directory and edit it to add the `verify_cert=False` parameter to the redfish.connect call (This is fixed in upcoming version 0.4.2). Try again with this new version:
+Of course, it won't work out of the box ;-) This is due to the fact by default we're working with a real server, not a simulator. So copy the file to your home directory and edit it to change the `simulator` parameter from False to True in the redfish.connect call. Try again with this new version:
 
 `$` **`python  ~/simple-proliant.py`**
 
-That should work much better, except at the end, because the default script queries a 2nd system which doesn't exist on the simulator. But you can see with the traces all the variables created with the Redfish tree in a dictionary automatically by the library, and easily usable in the main program, as you can check with the UUID or BIOS version displayed. Adapt the non-working line to display as well the Serial Number (again this is fixed in upcoming version 0.4.2).
+That should work much better, except at the end, because the default script queries the `bios` attribute which doesn't exist on the simulator. But you can see with the traces all the variables created with the Redfish tree in a dictionary automatically by the library, and easily usable in the main program, as you can check with the Serial number or BIOS version displayed. Adapt the non-working line to display more info.
 
 Now you can look at the python code to get data and perform some actions. The library documentation is available at: http://pythonhosted.org/python-redfish. The classes are defined here: http://pythonhosted.org/python-redfish/python-redfish_lib.html.
 
