@@ -121,11 +121,15 @@ https://docs.docker.com/engine/reference/builder/#arg
 
 ## Docker installation
 Docker is available externally from http://docs.docker.com/linux/step_one/ or using your distribution packages, or from github at https://github.com/docker/docker
-Version 18.06 is the current stable release. This lab requires at least version 1.7.
+Version 19.03 is the current stable release. This lab requires at least version 1.7.
 
-Ask to your instructor which Linux distribution will be used for the Lab (Ubuntu or CentOS). Then refer to the corresponding instructions below.
+Ask to your instructor which Linux distribution will be used for the Lab (Docker in Docker, Ubuntu or CentOS). Then refer to the corresponding instructions below.
 
 Other distributions should be as easy to deal with once the same packages have been installed using the package manager as they should be available directly (Case of most non-commercial distributions such as Debian, Fedora, Mageia, OpenSUSE, ...). Follow the instructions from https://docs.docker.com/engine/installation/
+
+### Docker in Docker installation
+
+As the docker image already provides the required packages, you just need to check that docker is running and at the correct minimal version. Go to the Check installation paragrah below for that.
 
 ### Ubuntu installation
 If you work on an Ubuntu environment for the Lab, you may want to use apt to do the installation of Docker with all its dependencies. As Ubuntu provides an old version of Docker, we will use a PPA providing a more up to date version:
@@ -265,16 +269,17 @@ Downloading packages:.
 
 ### Check installation
 
+If you're not using the Docker in Docker environement:
+
 `#` **`systemctl status docker`**
 
-Check that the correct version is installed and operational:
+Now for all versions, check that the correct version is installed and operational:
 
 `#` **`docker --version`**
 ```
 Docker version 18.05.0-ce, build f150324
 ```
 Note : The version could be different on your system.
-
 
 `#` **`docker info`**
 ```
@@ -848,8 +853,8 @@ RUN yum install -y tar bzip2
 COPY owncloud-7.0.15.tar.bz2 /var/www/html/
 RUN cd /var/www/html/ && tar xvfj owncloud-7.0.15.tar.bz2 && rm -f owncloud-7.0.15.tar.bz2
 RUN yum install -y php php-dom php-mbstring php-pdo php-gd
-RUN chown -R apache:apache /var/www/html/owncloud /data
 VOLUME /data
+RUN chown -R apache:apache /var/www/html/owncloud /data
 CMD /usr/sbin/apachectl -DFOREGROUND -k start
 EXPOSE 80
 ```
@@ -891,7 +896,7 @@ Another benefit is to define the container running parameters within a YAML conf
 
 ## Installing Docker compose
 
-Use the following commands:
+If you're not in the Docker in Docker setup, Use the following commands:
 
 `#` **`curl -L https://github.com/docker/compose/releases/download/1.9.0/docker-compose-$(uname -s)-$(uname -m) > /usr/local/bin/docker-compose`**
 
