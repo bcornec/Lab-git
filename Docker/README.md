@@ -267,6 +267,13 @@ Downloading packages:.
 
 `#` **`systemctl start docker`**
 
+### Windows installation
+
+### MacOS installation
+
+Download the Docker for MacOS version on https://download.docker.com/mac/stable/Docker.dmg
+Then create a subdirectory under you home directory and do all the steps below in it.
+
 ### Check installation
 
 If you're not using the Docker in Docker environement:
