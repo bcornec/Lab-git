@@ -734,6 +734,8 @@ httpd: Could not reliably determine the server's fully qualified domain name, us
 2. Use `docker ps` to see the status of your container and `docker logs` to see what happened.
 3. Try to adapt the Dockerfile to solve that issue. **Discuss with your trainer if you're stuck !**
 
+If the **`-ti`** option makes Apache die, then use the **`-d`** option instead to launch the container as a daemon instead.
+
 `#` **`perl -pi -e 's|D httpd|D /usr/sbin/apachectl -DFOREGROUND -k start|' Dockerfile`**
 (This magic command replaces the launch of the httpd command by the apachectl one with the right options. If you are using CentOS 7 as the host OS, you will have to install perl via yum).
 
