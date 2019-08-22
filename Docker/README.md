@@ -269,6 +269,8 @@ Downloading packages:.
 
 ### Windows installation
 
+Look at these contributed instructions instead: https://github.com/bcornec/Labs/blob/master/Docker/LabOnWindows.md
+
 ### MacOS installation
 
 Download the Docker for MacOS version on https://download.docker.com/mac/stable/Docker.dmg
