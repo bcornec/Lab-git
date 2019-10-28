@@ -5,3 +5,6 @@ Choose Docker
 If group XX then:
 ssh dock@172.20.37.250 -p 25XX
 Password is Redfish@TSS19
+
+wget http://172.20.37.250:80XX
+
