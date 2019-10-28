@@ -1,0 +1,7 @@
+Lab material: https://github.com/bcornec/Labs/
+
+Choose Docker
+
+If group XX then:
+ssh dock@172.20.37.250 -p 25XX
+Password is Redfish@TSS19
