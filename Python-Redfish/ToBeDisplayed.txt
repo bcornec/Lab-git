@@ -1,0 +1,7 @@
+Lab material: https://github.com/bcornec/Labs/
+
+Choose Python-Redfish
+
+If group XX then:
+ssh redfish@172.20.37.250 -p 22XX
+Password is Redfish@TSS19

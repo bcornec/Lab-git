@@ -125,11 +125,18 @@ Using a Web browser to get and set properties in a server is very useful for lea
 
 `wget` and `curl` are non-interactive CLI network downloaders available on Linux. They can be used to send https requests and perform actions via the Redfish API. They are already available on your system.
 
-On your server, as root (you are authorized to use sudo), install `jq` (hosted on the EPEL repository) to help visualize the JSON answers from the manager: 
+On your server, as root (you are authorized to use sudo), install `jq` (hosted on the EPEL repository on CentOS) to help visualize the JSON answers from the manager: 
+
+On CentOS7 do:
 
 `#` **`yum install -y epel-release`**
 
 `#` **`yum install -y jq`**
+
+On OpenSUSE 15.1 do:
+
+`#` **`zypper install -y jq`**
+
 
 Use these tools to walk through the Redfish data model on the public HPE simulator:
 
@@ -196,7 +203,13 @@ Much more is needed to understand the python language bases (a 3 day training is
 
 We will first connect to the Redfish simulator making an HTTP connection similar to what we have done previously with curl, but this time with python using the request module. First install the module which is not part of the standard library:
 
+On CentOS 7:
+
 `#` **`yum install -y python-requests`**
+
+On OpenSUSE 15.1:
+
+`#` **`zypper install -y python-requests`**
 
 Then create the following script `using-requests.py` using an editor such as `vi` (if you're familiar with it) or `nano` (that you'd need to install) to arrive to the following result:
 
@@ -298,6 +311,8 @@ This is a full 100% Free and Open Source Software, under the Apache v2 license a
 
 Install the python-redfish repository.
 
+On CentOS 7:
+
 `#` **`cd /etc/yum.repos.d`**
 
 `#` **`cat > python-redfish.repo << EOF`**
@@ -307,15 +322,37 @@ name=centos 7 x86_64 - python-redfish Vanilla Packages
 baseurl=ftp://ftp.mondorescue.org/centos/7/x86_64
 enabled=1
 gpgcheck=0
-gpgkey=ftp://mondo.hpintelco.org/centos/7/x86_64/python-redfish.pubkey
+gpgkey=ftp://ftp.mondorescue.org/centos/7/x86_64/python-redfish.pubkey
+EOF
+```
+
+On OpenSUSE 15.1:
+
+`#` **`cd /etc/zypp/repos.d`**
+
+`#` **`cat > python-redfish.repo << EOF`**
+```
+[python-redfish]
+name=opensuse 15.1 x86_64 - python-redfish Vanilla Packages
+baseurl=ftp://ftp.mondorescue.org/opensuse/15.1/x86_64
+enabled=1
+gpgcheck=0
+gpgkey=ftp://ftp.mondorescue.org/opensuse/15.1/x86_64/python-redfish.pubkey
 EOF
 ```
 
 Now, install `python-redfish`.
 
+On CentOS 7:
+
 `#` **`yum install -y --setopt=tsflags='' python-pbr python-setuptools python-redfish`**
 
 The setopt option passed here disables the non-installation of man page and docs, which will be useful later on (default configuration of the CentOS 7 Docker miage)
+
+On OpenSUSE 15.1:
+
+`#` **`zypper install -y python-redfish`**
+
 
 ### Using the redfish-client
 
@@ -496,11 +533,15 @@ Lots of debugging info !
 
 This allows to see all the calls made, as the client is parsing the full Redfish tree to store data in a dictionary (done at the library level), before extracting what is supposed useful for your system. That also explains why the command take some time before answering.
 
+Since version 0.4.4, you can also monitor sensor values:
+
+`$` **`redfish-client monitor ilosim --insecure`**
+
 ### Using the python-redfish library directly
 
 The library comes with a simple example called '`simple-proliant.py`' to use the library itself.
 
-`$` **`cd /usr/share/doc/python-redfish-0.4.2`**
+`$` **`cd /usr/share/doc/python-redfish-0.4.4`**
 
 `$` **`more simple-simulator.py`**
 
@@ -559,11 +600,24 @@ In order to install it we will need pip (which is the python installer program w
 
 So first start by installing pip:
 
+On CentOS 7:
+
 `#` **`yum install -y python-pip`**
+
+On OpenSUSE 15.1:
+
+`#` **`zypper install -y python-pip`**
 
 Then you can follow the installation instructions for the library with the pip command. If you get a permission denied message, it may be because you're not running the command as root, so you have no rights to install the software in the python directory structure. A way to mitigate that is to use the virtualenv feature of python, which creates a local python environement, that you can pollute without impacting the main installation. So do not become root to force the installation, but instead run:
 
+On CentOS 7:
+
 `#` **`yum install -y python-virtualenv`**
+
+On OpenSUSE 15.1:
+
+`#` **`zypper install -y python-virtualenv`**
+
 
 You now have a new commd, `virtualenv` that you'll be able to use to create that particular local python environement:
 

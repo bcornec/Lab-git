@@ -6,7 +6,7 @@ my $nbctn = 1;
 my $i = 1;
 
 # Rebuild image
-my $res = system "docker build -f Dockerfile.redfish -t redfish .";
+my $res = system "docker build -f Dockerfile.redfish.opensuse -t redfish .";
 exit(-1) if ($res != 0);
 
 # Launch containers for Lab
